@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week1 Mission</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha512-NhSC1YmyruXifcj/KFRWoC561YpHpc5Jtzgvbuzx5VozKpWvQ+4nXhPdFgmx8xqexRcpAglTj9sIBWINXa8x5w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <link rel="stylesheet" href="./style.css">
+</head>
+
+
+<body>
+
+  <!-- navbar -->
+  <nav class="navbar bgcolor">
+    <div class="container-fluid ">
+      <span class="navbar-brand mb-0 h1 fw-bold ">Week1 Mission</span>
+    </div>
+  </nav>
+
+  <div id="app">
+    <div id="" class=" container">
+      <!-- bannerCarousel -->
+      <div id="bannerCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img :src="carousel.imgUrl[0]" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img :src="carousel.imgUrl[1]" class="d-block w-100" alt="...">
+          </div>
+          <div class="carousel-item">
+            <img :src="carousel.imgUrl[2]" class="d-block w-100" alt="...">
+          </div>
+        </div>
+        <button class="carousel-control-prev btn_bar" type="button" data-bs-target="#bannerCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next btn_bar" type="button" data-bs-target="#bannerCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Next</span>
+        </button>
+      </div>
+      <!-- 商品列表 -->
+      <div id="card" class=" container mt-5 ">
+        <h1>時尚蛋糕</h1>
+        <div class="row justify-content-between ">
+          <div v-for="item in products.cake" :key="item.category" class="card mt-5" style="width: 18rem;">
+            <div class="mt-3">
+              <img :src="item.imageUrl[0]" class="card-img-top " :alt="item.category">
+            </div>
+            <div class="card-body">
+              <h5 class="card-title">{{item.category}}</h5>
+              <div class="solgon-box mb-3">
+                <h6 class="card-">{{item.solgon}}</h6>
+              </div>
+              <p class="card-text text_box">{{item.description}}</p>
+
+              <!-- 點擊後將該商品傳入dataList 已完成彈出商品視窗-->
+              <div class="buttonBox d-flex justify-content-between">
+                <button type="button" class="btn bgcolor" data-bs-toggle="modal" data-bs-target="#cakeCard" @click="clickItem(item)">
+                  查看商品
+                </button>
+                <button v-if="!item.on_sale" :disabled="!item.on_sale" class="btn btn-secondary">售 完</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 彈出商品視窗 -->
+        <div class="modal fade" id="cakeCard" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cakeCardLabel" aria-hidden="true">
+
+          <div class="modal-dialog">
+            <!-- 將剛剛存入的dataList渲染出來 -->
+            <div class="modal-content" v-for="item in dataList" :key="item.category">
+              <div class="modal-header px-3 py-2">
+                <h5 class="modal-title fw-bold text-aria-color" id="cakeCardLabel">{{item.category}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" @click="closeWindows"></button>
+              </div>
+              <div class="modal-body row ">
+                <div class="data_list_img_box">
+                  <div id="listCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+                    <div class="carousel-inner">
+                      <template v-for="(img,i) in item.imageUrl" :key="i">
+                        <div :class="['carousel-item' ,{active : i== 0} ]">
+                          <img :src="img" class="d-block w-100" alt="...">
+                        </div>
+                      </template>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#listCarousel" data-bs-slide="prev" @click="removeImgOutline">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#listCarousel" data-bs-slide="next" @click="addImgOutline">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                  </div>
+                </div>
+
+                <div class="d-flex px-1 py-2">
+                  <div class="datalist_img_box mx-2" v-for="(img,i) in item.imageUrl" :key="i" :class="{datalist_img_box_outline:imgOutLine==i}">
+                    <img class="w-100" :src="img" alt="">
+                  </div>
+                </div>
+                <!-- 文字區域 -->
+                <div class="my-1 py-1 text-aria-color">
+                  <h6>{{item.description}}</h6>
+                  <p class="my-0 ">尺寸:{{item.OriginSize}}吋</p>
+                  <p class="my-1">價格 : {{item.OriginPrice}}</p>
+                </div>
+
+                <div v-for="(price,num) in item.size" :key="num">
+                  <div class="form-check price_select_border mb-2">
+                    <input class="form-check-input " type="radio" name="price" :id="num" @click="changePrice(price.price,price.size)">
+                    <label class="form-check-label " :for="num">
+                      {{price.size}}吋 /+{{price.price}}
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="modal-footer d-flex py-1 px-3">
+                <div class="me-auto d-flex flex-column">
+                  <h6 class="text-aria-color">尺寸 :{{cakePriceSize.size}}吋</h6>
+                  <div class="d-flex align-items-end">
+                    <h5 class="text-aria-color">售價 : </h5>
+                    <h4 class="text-aria-color"> $ {{cakePriceSize.price}}
+                    </h4>
+                  </div>
+                </div>
+                <button v-if="item.on_sale" type="button" class="btn bgcolor" data-bs-dismiss="modal">
+                  加入購物車</button>
+                <button v-if="!item.on_sale" :disabled="!item.on_sale" class="btn btn-secondary">售 完</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+
+  <script type="module" src="./main.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <title>後台系統-登入</title>
+</head>
+<style>
+  /* * {
+    outline: 1px solid #000;
+  } */
+  html,
+  body {
+    height: 100%;
+  }
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
+  .loginbox {
+    width: 400px;
+  }
+</style>
+
+<body>
+  <div id="app">
+    <div class="container bg-light border border-primary border-2 rounded loginbox ">
+      <div class="row justify-content-center text-center ">
+        <h2 class="m-3 fw-bold">
+          後台管理系統
+        </h2>
+      </div>
+      <div class=" ">
+        <form class="form-signin " @submit.prevent="login">
+          <div class="mb-3 form-floating @submit.prevent">
+            <input type="email" class="form-control " id="loginEmail" placeholder="name@example.com" v-model="user.username" required>
+            <label for="loginEmail">帳號</label>
+          </div>
+          <div class="mb-3 form-floating">
+            <input type="password" class="form-control" id="loginPassword" placeholder="Password" v-model="user.password" required>
+            <label for="loginPassword">密碼</label>
+          </div>
+          <div class="d-flex justify-content-center">
+            <button type="button" class="btn btn-secondary m-2">清除</button>
+            <button type="submit" class="btn btn-primary m-2">登入</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+  <script src=" https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.25.0/axios.min.js" integrity="sha512-/Q6t3CASm04EliI1QyIDAA/nDo9R8FQ/BULoUFyN4n/BDdyIxeH7u++Z+eobdmr11gG5D/6nPFyDlnisDwhpYA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="./js/app.js" type="module"></script>
+</body>
+
+</html>

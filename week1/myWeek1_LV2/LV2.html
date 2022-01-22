@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <style>
+    img {
+      object-fit: contain;
+      max-width: 100%;
+    }
+
+    .primary-image {
+      height: 300px;
+    }
+
+    .images {
+      height: 150px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="container">
+      <div class="row py-3">
+        <div class="col-md-6">
+          <h2>產品列表</h2>
+          <table class="table table-hover mt-4">
+            <thead>
+              <tr>
+                <th width="150">產品名稱</th>
+                <th width="120">
+                  原價
+                </th>
+                <th width="120">
+                  售價
+                </th>
+                <th width="150">
+                  是否啟用
+                </th>
+                <th width="120">
+                  查看細節
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <template v-for="(item,index) in products" :key="item.category">
+                <tr>
+                  <td width="150">{{ item.category }}</td>
+                  <td width="120">
+                    {{ item.origin_price }}
+                  </td>
+                  <td width="120">
+                    {{ item.price }}
+                  </td>
+                  <td width="150">
+                    <span class="text-success" v-show="item.is_enabled===1">啟用</span>
+                    <span v-show="item.is_enabled !==1">未啟用</span>
+                  </td>
+                  <td width="120">
+
+                    <button type="button" class="btn btn-primary" @click="clickItem(index)">查看細節</button>
+                  </td>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+          <p>目前有 <span>{{ products.length }}</span> 項產品</p>
+        </div>
+        <div class="col-md-6">
+          <h2>單一產品細節</h2>
+          <template v-for="(item,index) in products" :key="item.id" v-show="index===listNum">
+            <div class="card mb-3" v-if="index===listNum">
+              <img :src="item.imageUrl" class="card-img-top primary-image" alt="主圖">
+              <div class="card-body">
+                <h5 class="card-title">
+                  {{ item.category }}
+                  <span class="badge bg-primary ms-2">{{}}</span>
+                </h5>
+                <p class="card-text">商品描述：{{ item.desdescription }}</p <p class="card-text">商品內容：{{ item.content }}</p>
+                <div class="d-flex">
+
+                  <p class="card-text text-secondary"><del>{{item.origin_price}}元</del></p>
+                  <p class="card-text mx-2"> {{item.price }}元/ {{item.unit }}</p>
+                </div>
+
+              </div>
+            </div>
+            <template v-for="(item,idx) in item.imagesUrl" :key="idx">
+              <img :src="item" alt="" class="images m-2" v-if="index===listNum">
+            </template>
+          </template>
+          <p class="text-secondary" v-if="listNum===null">請選擇一個商品查看</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
+  <script type="module" src="./lv2Main.js">
+
+  </script>
+
+
+</body>
+
+</html>
