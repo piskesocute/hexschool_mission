@@ -10,20 +10,29 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js' integrity='sha512-Xk3wWei2TGrsh9kDSBKUMIjw/86sLUvhtnv9f7fOuIwhhiUTKz8szkWkzHthrM5Bb3Bu9idSzkxOrkzhcneuiw==' crossorigin='anonymous'></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Open+Sans&display=swap');
+
+    /* * {
+      outline: 1px solid #000;
+    } */
+
     body {
       font-family: 'Noto Sans TC', sans-serif;
     }
+
     img {
       object-fit: contain;
       max-width: 100%;
     }
+
     .imageBox {
       height: 400px;
     }
-    .click-bgcolor{
+
+    .click-bgcolor {
       background-color: rgba(33, 37, 41, 0.075);
       opacity: 0.5;
     }
+
     .click-bgcolor:hover {
       background-color: rgba(255, 255, 255, 0);
     }
@@ -44,7 +53,7 @@
         <button type="button" class="btn btn-primary col-2 mx-3">查看產品列表</button>
         <button type="button" class="btn btn-primary col-2 mx-3">編輯產品內容</button>
       </div>
-      <div class="row py-3 border-top border-3">
+      <!-- <div class="row py-3 border-top border-3">
         <div class=" col-md-6">
           <h2>產品資訊</h2>
           <template v-if="itemList.id">
@@ -109,80 +118,90 @@
           <div style="line-height: 400px;" class="text-center align-items-center" v-else>
             <p class="mx-0 my-auto fs-5">目前沒有選擇商品</p>
           </div>
+        </div> -->
+      <div class="row">
+        <div class="d-flex justify-content-between align-items-center text-center">
+          <h2 class="my-0">產品列表</h2>
+          <p class="me-auto my-0">目前有 <span>{{productsList.length }}</span> 項產品</p>
+          <button type="=button" class="btn btn-primary me-3" @click="" :data-id="index">新增產品</button>
+          <button type="=button" v-if="1" type="button" class="btn btn-secondary " disabled @click="" :data-id="index">刪除選取項目</button>
+          <button type="=button" v-else type="button" class="btn btn-outline-danger " @click="" :data-id="index">刪除選取項目</button>
         </div>
-        <div class="col-md-6 border-start border-3">
-          <div class="d-flex justify-content-between align-items-center ">
-            <h2 >產品列表</h2>
-            <p class="m-0" >目前有 <span>{{productsList.length }}</span> 項產品</p>
-          </div>
 
-          <table class="table table-hover mt-4 text-center" class="">
-            <thead >
-              <tr>
-                <th width="150">產品名稱</th>
-                <th width="120">
-                  原價
-                </th>
-                <th width="120">
-                  售價
-                </th>
-                <th width="150">
-                  商品狀態
-                </th>
-                <th width="120">
-                  詳細資訊
-                </th>
-              </tr>
-            </thead>
-            <tbody>
+        <table class="table table-hover mt-4 text-center" class="">
+          <thead>
+            <tr>
+              <th width="120">
+              </th>
+              <th width="120">
+                預覽圖
+              </th>
+              <th width="120">
+                產品名稱
+              </th>
+              <th width="120">
+                產品類型
+              </th>
+              <th width="120">
+                原價
+              </th>
+              <th width="120">
+                售價
+              </th>
+              <th width="120">
+                商品狀態
+              </th>
+              <th width="120">
 
-              <tr v-for="(item,index) in productsList" 
-              :key="item.id"
-              :disabled="isClick===index"
-              :class="[isClick===index ? 'click-bgcolor':'']"
-              >
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item,index) in productsList" :key="item.id" :disabled="isClick===index" :class="[isClick===index ? 'click-bgcolor':'','align-middle']
+            ">
+            <label for="#input">
+            <td width="2%">
+              <input type="checkbox" id="input">
+            </label>
+            </td>
+              <td width="10%" class="align-middle">
+                <div class="  d-flex justify-content-center align-items-center">
+                  <div class="w-75 mx-0 my-auto">
+                    <img class="" :src="item.imageUrl" alt="">
+                  </div>
 
-                <td width="150">{{item.category}}</td>
-                <td width="120">{{item.origin_price}}</td>
-                <td width="120">{{ item.price }}</td>
-                <td width="150" class="text-center">
+                </div>
+              </td>
+              <td width="">
+                {{item.title}}
+              </td>
+              <td width="">
+                {{item.category}}
+              </td>
+              <td width="10%">{{item.origin_price}}</td>
+              <td width="10%">{{ item.price }}</td>
 
+              <td width="10%" class="text-center">
 
-                  
-                  <span 
-                  v-if="item.num===0" 
-                  class="badge rounded-pill bg-danger fs-6">已售完</span>
+                <span v-if="item.num===0" class="badge rounded-pill bg-danger fs-6">已售完</span>
 
+                <span v-else-if="item.is_enabled===1" class="badge rounded-pill bg-success fs-6 fw">銷售中</span>
 
-                  <span 
-                  v-else-if="item.is_enabled===1" 
-                  class="badge rounded-pill bg-success fs-6 fw">銷售中</span>
-
-
-
-                  <span 
-                  v-else 
-                  class="badge rounded-pill bg-secondary fs-6">下架</span>
-
-
-
-                </td>
-                <td width="120">
-
-                  <button 
-                  :disabled="isClick===index" 
-                  type="button" 
-                  class="btn btn-primary" 
-                  @click="checkItem(item,index,$event)"
-                  :data-id="index">查看細節</button>
-                  
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+                <span v-else class="badge rounded-pill bg-secondary fs-6">下架</span>
+              </td>
+              <!-- <td width="120">
+                <button :disabled="isClick===index" type="button" class="btn btn-primary" @click="checkItem(item,index,$event)" :data-id="index">查看細節</button>
+              </td> -->
+              <td width="20% ">
+                <button type="button" class="btn btn-success me-3" @click="" :data-id="index">查看/編輯</button>
+                <button type="button" class="btn btn-outline-danger " @click="" :data-id="index">刪除</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
+  </div>
   </div>
   <script src="./js/product.js" type="module"></script>
 </body>
