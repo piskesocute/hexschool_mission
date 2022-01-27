@@ -1,6 +1,8 @@
 import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js";
 
 
+let selectModal = ""
+
 const app = createApp({
   data() {
     return {
@@ -22,6 +24,7 @@ const app = createApp({
           window.location = 'index.html';
         })
     },
+    // 取得資料
     getProductList() {
       const url = `${this.apiUrl}/api/${this.path}/admin/products`
       axios.get(url)
@@ -33,10 +36,13 @@ const app = createApp({
           alert(err.data.message)
         })
     },
+    // 詳細資料
     checkItem(item, index) {
       this.itemList = item
       this.isClick = index
+      console.log(this.itemList);
     },
+    // 登出
     LogOut() {
       const urlLogout = `${this.apiUrl}/logout`;
       const logoutConfirm = confirm('確定要登出嗎?')
@@ -50,11 +56,20 @@ const app = createApp({
           })
       }
     },
+    // modal
+    clickModal() {
+      selectModal.show()
+    },
   },
   mounted() {
+    // 取得token
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)backstageCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     axios.defaults.headers.common['Authorization'] = token;
     this.checkLogin()
+    // modal
+    selectModal = new bootstrap.Modal(document.getElementById('selectModal'))
+
+
   },
 })
 app.mount('#app')

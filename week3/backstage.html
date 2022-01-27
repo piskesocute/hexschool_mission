@@ -11,9 +11,9 @@
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Open+Sans&display=swap');
 
-    /* * {
+    * {
       outline: 1px solid #000;
-    } */
+    }
 
     body {
       font-family: 'Noto Sans TC', sans-serif;
@@ -49,85 +49,15 @@
         </div>
       </div>
       <div class="row py-3 border-top border-3 ">
-        <!-- 標記: 這邊之後用vuerouter串 -->
-        <button type="button" class="btn btn-primary col-2 mx-3">查看產品列表</button>
-        <button type="button" class="btn btn-primary col-2 mx-3">編輯產品內容</button>
       </div>
-      <!-- <div class="row py-3 border-top border-3">
-        <div class=" col-md-6">
-          <h2>產品資訊</h2>
-          <template v-if="itemList.id">
-            <div class="card mb-3">
-
-                <img :src="itemList.imageUrl" class="imageBox card-img-top" :alt="itemList.category">
-
-              <div class="card-body">
-                <table class="table table-bordered border-3 align-items-center">
-                  <tr>
-                    <th class="col-2 bg-primary bg-opacity-10 " scope="row">產品名稱</th>
-                    <td  colspan="5" >{{ itemList.title }}</td>
-                  </tr>
-                  <tr>
-                    <th class="col-2 bg-primary bg-opacity-10" scope="row">產品類型</th>
-                    <td  colspan="2" >{{ itemList.category }}</td>
-                    <th class="col-2 bg-primary bg-opacity-10" scope="row">銷售狀態</th>
-                    <td colspan="2" v-if="itemList.num===0">
-                      <span class="badge rounded-pill bg-dange fs-6">已售完</span>
-                    </td>
-                    <td colspan="2"  v-else-if="itemList.is_enabled===1">
-                      <span class="badge rounded-pill bg-success fs-6 ">銷售中</span>
-                    </td>
-                    <td colspan="2" v-else>
-                      <span class="badge rounded-pill bg-secondary fs-6">下架</span>
-                    </td>
-                  </tr>
-                  <tr >
-                    <th class="col-2 bg-primary bg-opacity-10" scope="row" >原價</th>
-                    <td class="col-2" >{{itemList.origin_price }}</td>
-                    <th class="col-2 bg-primary bg-opacity-10" scope="row" >售價</th>
-                    <td class="col-2" >{{itemList.price }}</td>
-                    <th class="col-2 bg-primary bg-opacity-10" scope="row" >商品數量</th>
-                    <td class="col-2" >{{itemList.num }}/{{itemList.unit}}</td>
-                  </tr>
-                  <tr>
-                    <th class="col-2 bg-primary bg-opacity-10" scope="row">商品描述</th>
-                    <td colspan="5">{{ itemList.description }}</td>
-                  </tr>
-                  <tr>
-                    <th class="col-2 bg-primary bg-opacity-10" scope="row">商品內容</th>
-                    <td colspan="5">{{itemList.content }}</td>
-                  </tr>
-
-                </table>
-              </div>
-
-            <template v-if="itemList.imagesUrl">
-              <div class="d-flex flex-wrap">
-
-                <div 
-                class="col-6 p-3" 
-                v-for="(item,index) in itemList.imagesUrl" 
-                :key="index">
-
-                  <img :src="item">
-                </div>
-              </div>
-            </div>
-            </template>
-          </template>
-          <div style="line-height: 400px;" class="text-center align-items-center" v-else>
-            <p class="mx-0 my-auto fs-5">目前沒有選擇商品</p>
-          </div>
-        </div> -->
       <div class="row">
         <div class="d-flex justify-content-between align-items-center text-center">
           <h2 class="my-0">產品列表</h2>
           <p class="me-auto my-0">目前有 <span>{{productsList.length }}</span> 項產品</p>
-          <button type="=button" class="btn btn-primary me-3" @click="" :data-id="index">新增產品</button>
-          <button type="=button" v-if="1" type="button" class="btn btn-secondary " disabled @click="" :data-id="index">刪除選取項目</button>
-          <button type="=button" v-else type="button" class="btn btn-outline-danger " @click="" :data-id="index">刪除選取項目</button>
+          <button type="=button" class="btn btn-primary me-3">新增產品</button>
+          <button type="=button" v-if="1" type="button" class="btn btn-secondary " disabled>刪除選取項目</button>
+          <button type="=button" v-else type="button" class="btn btn-outline-danger ">刪除選取項目</button>
         </div>
-
         <table class="table table-hover mt-4 text-center" class="">
           <thead>
             <tr>
@@ -157,13 +87,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item,index) in productsList" :key="item.id" :disabled="isClick===index" :class="[isClick===index ? 'click-bgcolor':'','align-middle']
-            ">
-            <label for="#input">
-            <td width="2%">
-              <input type="checkbox" id="input">
-            </label>
-            </td>
+            <tr v-for="(item,index) in productsList" :key="item.id" class="">
+              <label for="#input">
+                <td width="2%">
+                  <input type="checkbox" id="input">
+              </label>
+              </td>
               <td width="10%" class="align-middle">
                 <div class="  d-flex justify-content-center align-items-center">
                   <div class="w-75 mx-0 my-auto">
@@ -189,20 +118,119 @@
 
                 <span v-else class="badge rounded-pill bg-secondary fs-6">下架</span>
               </td>
-              <!-- <td width="120">
-                <button :disabled="isClick===index" type="button" class="btn btn-primary" @click="checkItem(item,index,$event)" :data-id="index">查看細節</button>
-              </td> -->
               <td width="20% ">
-                <button type="button" class="btn btn-success me-3" @click="" :data-id="index">查看/編輯</button>
+                <button type="button" class="btn btn-success me-3" @click="checkItem(item,index);clickModal()" :data-id="index">查看/編輯</button>
                 <button type="button" class="btn btn-outline-danger " @click="" :data-id="index">刪除</button>
+
+
+
               </td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
+
+
+    <!-- modal -->
+    <div class="modal fade" id="selectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-xl ">
+        <div class="modal-content ">
+          <div class="modal-header ">
+            <h5 class="modal-title" id="staticBackdropLabel">編輯商品</h5>
+
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+
+          <div class="modal-body ">
+            <div class="container-fluid">
+              <div class="d-flex">
+                <div class="col-5 h5 fw-bold mb-1">
+                  新增圖片
+                  <!-- 滾動要添加height -->
+                  <div class="d-flex flex-column" style="height: 600px; overflow-y: scroll;">
+                    <div v-for="image in itemList.imagesUrl" :key="image" class="my-1 ps-0 pe-1 ">
+                      <div class="input-group mb-2">
+                        <input type="text" class="form-control " placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="button-addon2" :value="image" style="float: left;">
+                        <button class="btn btn-primary" type="button" id="button-addon2">送出</button>
+                      </div>
+                      <div class="col-12">
+                        <img class="w-100" :src="image" alt="">
+                      </div>
+                      <button class="btn btn-danger col-12 mt-2" type="button" id="button-addon2">刪除</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-7 ">
+                  <div class="row ps-3 mb-2">
+                    <div class="">
+                      <label for="productName" class="form-label h5 fw-bold mb-1">產品名稱</label>
+                      <input type="text" class="form-control" id="productName" placeholder="我愛一條柴" v-model="itemList.title">
+                    </div>
+                  </div>
+                  <div class="row ps-3 mb-2">
+                    <div class="col-4 ">
+                      <label for="productType" class="form-label h5 fw-bold mb-1">產品分類</label>
+                      <input type="texy" class="form-control" id="productType" placeholder="name@example.com" v-model="itemList.category">
+                    </div>
+                    <div class="col-4 ">
+                      <label for="productEnable" class="form-label h5 fw-bold mb-1">產品狀態</label>
+                      <select class="form-select" aria-label="Default select example" id="productEnable">
+                        <option selected>請選擇產品狀態</option>
+                        <option value="1">上架</option>
+                        <option value="2">下架</option>
+                        <option value="3">售完</option>
+                      </select>
+                    </div>
+                    <div class="col-4">
+                      <label for="Price" class="form-label h5 fw-bold mb-1">商品單位</label>
+                      <input type="text" class="form-control" id="Price" placeholder="商品單位" v-model="itemList.unit">
+                    </div>
+                  </div>
+                  <div class="row ps-3 mb-2">
+                    <div class="col-4">
+                      <label for="originPrice" class="form-label h5 fw-bold mb-1">原價</label>
+                      <input type="number" class="form-control " id="originPrice" placeholder="元" v-model="itemList.origin_price">
+                    </div>
+                    <div class="col-4 ">
+                      <label for="Price" class="form-label h5 fw-bold mb-1">售價</label>
+                      <input type="number" class="form-control" id="Price" placeholder="元" v-model="itemList.price">
+                    </div>
+                    <div class="col-4 ">
+                      <label for="Price" class="form-label h5 fw-bold mb-1">庫存數量</label>
+                      <input type="number" class="form-control" id="Price" placeholder="商品單位" v-model="itemList.quantity">
+                    </div>
+
+                  </div>
+                  <div class="row ps-3 mb-2">
+                    <div class=" col-12 ">
+                      <label for="productContent" class="form-label h5 fw-bold mb-1">商品內容</label>
+                      <textarea class="form-control overflow-auto align-self-stretch" placeholder="商品內容" id="productContent" v-model="itemList.content" style="height:100px;resize: none;text-align: justify;"></textarea>
+                    </div>
+                  </div>
+                  <div class="row ps-3 mb-2">
+                    <div class=" col-12 ">
+                      <label for="productContent" class="form-label h5 fw-bold mb-1">商品描述</label>
+                      <textarea v-model="itemList.description" class="form-control overflow-auto align-self-stretch " placeholder="請詳細描述商品" id="productContent" style="height:200px;resize: none; text-align: justify;"></textarea>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer ">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Understood</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  </div>
+  
+
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
   <script src="./js/product.js" type="module"></script>
 </body>
 
