@@ -2,6 +2,7 @@ import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue
 
 
 let selectModal = ""
+let deleteModal = ""
 
 const app = createApp({
   data() {
@@ -9,11 +10,62 @@ const app = createApp({
       apiUrl: 'https://vue3-course-api.hexschool.io/v2',
       path: 'evan-classuse',
       productsList: [],
-      itemList: [],
-      isClick: null,
+      is_Edit: null,
+      itemList: {
+        imagesUrl: ['']
+      },
     }
   },
   methods: {
+    addNewData() {
+      this.is_Edit = 0;
+      this.itemList = {
+        imagesUrl: ['']
+      };
+      this.clickModal();
+    },
+    // 開啟查看或編輯頁面
+    checkItem(item, index) {
+      this.itemList = item
+      if (this.itemList.quantity < 1) this.itemList.is_enabled = 2
+      this.is_Edit = 1;
+      console.log(this.itemList.is_enabled);
+    },
+    openDeleteModal(item) {
+      this.itemList = item
+      deleteModal.show()
+    },
+
+    deleteData(id) {
+      const url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
+      axios.delete(url)
+        .then((res) => {
+          console.log(res.data);
+        }).catch((err) => {
+          console.log(err);
+        })
+    },
+    pushData(id) {
+      let url = `${this.apiUrl}/api/${this.path}/admin/product`
+      let methods = 'post'
+      if (this.is_Edit === 1) {
+        console.log(id);
+        url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
+        methods = 'put'
+      }
+      console.log(methods);
+      console.log({ data: this.itemList });
+
+      axios[methods](url, { data: this.itemList })
+        .then((res) => {
+          console.log(res.data);
+        }).catch((err) => {
+          console.dir(err)
+        })
+
+    },
+
+
     checkLogin() {
       const url = `${this.apiUrl}/api/user/check`
       axios.post(url)
@@ -36,12 +88,7 @@ const app = createApp({
           alert(err.data.message)
         })
     },
-    // 詳細資料
-    checkItem(item, index) {
-      this.itemList = item
-      this.isClick = index
-      console.log(this.itemList);
-    },
+
     // 登出
     LogOut() {
       const urlLogout = `${this.apiUrl}/logout`;
@@ -66,9 +113,12 @@ const app = createApp({
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)backstageCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     axios.defaults.headers.common['Authorization'] = token;
     this.checkLogin()
-    // modal
-    selectModal = new bootstrap.Modal(document.getElementById('selectModal'))
+    console.log(token);
 
+    // datalistmodal
+    selectModal = new bootstrap.Modal(document.getElementById('selectModal'))
+    // deletemodal
+    deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'))
 
   },
 })
