@@ -10,7 +10,7 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js' integrity='sha512-Xk3wWei2TGrsh9kDSBKUMIjw/86sLUvhtnv9f7fOuIwhhiUTKz8szkWkzHthrM5Bb3Bu9idSzkxOrkzhcneuiw==' crossorigin='anonymous'></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Open+Sans&display=swap');
-/* 
+    /* 
     * {
       outline: 1px solid #000;
     } */
@@ -130,13 +130,13 @@
         </table>
       </div>
     </div>
-    <!-- modal -->
-    <div class="modal fade" id="selectModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- Add&Edit modal -->
+    <div class="modal fade" id="selectModal">
       <div class="modal-dialog modal-xl ">
         <div class="modal-content ">
           <div class="modal-header ">
             <h5 class="modal-title" id="staticBackdropLabel">編輯商品</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <button type="button" class="btn-close"  aria-label="Close" @click="closeAddEditModal()"></button>
           </div>
 
           <div class="modal-body ">
@@ -172,14 +172,14 @@
                     </div>
                     <div class="col-4 ">
                       <label for="productEnable" class="form-label h5 fw-bold mb-1">產品狀態</label>
-                      <select class="form-select" aria-label="Default select example" id="productEnable" v-model="itemList.is_enabled"> 
+                      <select class="form-select" aria-label="Default select example" id="productEnable" v-model="itemList.is_enabled">
                         <option selected>請選擇產品狀態</option>
                         <option value="0">下架</option>
                         <option value="1">上架</option>
                         <option value="2">售完</option>
                       </select>
                     </div>
-                    
+
                     <div class="col-4">
                       <label for="Price" class="form-label h5 fw-bold mb-1">商品單位</label>
                       <input type="text" class="form-control" id="Price" placeholder="商品單位" v-model="itemList.unit">
@@ -195,7 +195,7 @@
                       <input type="number" class="form-control" id="Price" placeholder="元" v-model="itemList.price">
                     </div>
                     <div class="col-4 ">
-                      <label for="Price" class="form-label h5 fw-bold mb-1" >庫存數量</label>
+                      <label for="Price" class="form-label h5 fw-bold mb-1">庫存數量</label>
                       <input type="number" class="form-control" id="Price" placeholder="商品單位" v-model="itemList.quantity">
                     </div>
 
@@ -218,14 +218,14 @@
             </div>
           </div>
           <div class="modal-footer ">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" >返回</button>
+            <button type="button" class="btn btn-secondary"  @click="closeAddEditModal()">返回</button>
             <button type="button" class="btn btn-primary" @click="pushData(itemList.id)">送出</button>
           </div>
         </div>
       </div>
     </div>
-<!-- delete modal -->
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <!-- delete modal -->
+    <div class="modal fade" id="deleteModal">
       <div class="modal-dialog modal-dialog-centered ">
         <div class="modal-content">
           <div class="modal-header bg-danger">
@@ -233,22 +233,60 @@
           </div>
           <div class="modal-body my-3 ">
             <p class="fs-5 border-bottom border-2">準備刪除下列商品</p>
-            <span class="text-primary text-opacity-75">商品名稱：</span><p>{{itemList.title}}</p>
-            <span class="text-primary text-opacity-75">商品ID：</span><p>{{itemList.id}}</p>
-            
+            <span class="text-primary text-opacity-75">商品名稱：</span>
+            <p>{{itemList.title}}</p>
+            <span class="text-primary text-opacity-75">商品ID：</span>
+            <p>{{itemList.id}}</p>
+
           </div>
           <div class="modal-footer d-flex">
             <p class="me-auto">確認無誤後，請按下刪除鍵</p>
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">返回</button>
+            <button type="button" class="btn btn-secondary" @click="closeDeleteModal()">返回</button>
             <button type="button" class="btn btn-danger" @click="deleteData(itemList.id)">確定刪除</button>
           </div>
         </div>
       </div>
     </div>
-
-
+    <!-- successModal -->
+    <div class="modal fade" id="successModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header bg-success bg-opacity-25">
+            <h5 class="modal-title">成功</h5>
+          </div>
+          <div class="modal-body">
+            <span v-if="is_Edit===0">新增資料</span>
+            <span v-else-if="is_Edit===1">更新資料</span>
+            <span v-else-if="is_Edit===2">刪除資料</span>
+            <span>操作成功，五秒後自動重整頁面或是自行關閉</span>
+          </div>
+          <div class="modal-footer ">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- errorModal -->
+    <div class="modal fade" id="errorModal" >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header ">
+            <h5 class="modal-title">錯誤</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button type="button" @click="openSuccessModal()">test</button>
   </div>
-  
+
 
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>

@@ -1,19 +1,23 @@
 import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js";
 
 
-let selectModal = ""
-let deleteModal = ""
+let selectModal = "";
+let deleteModal = "";
+let successModal = "";
+let errorModal = '';
 
 const app = createApp({
   data() {
     return {
+      
       apiUrl: 'https://vue3-course-api.hexschool.io/v2',
       path: 'evan-classuse',
       productsList: [],
-      is_Edit: null,
+      
       itemList: {
         imagesUrl: ['']
       },
+      is_Edit: null,
     }
   },
   methods: {
@@ -30,7 +34,7 @@ const app = createApp({
 
     },
     // 開啟查看或編輯modal按鈕
-    checkItem(item, index) {
+    checkItem(item) {
       this.is_Edit = 1;
       this.itemList = item
       // 判斷商品賣完了沒，還沒串購買頁面先這樣示範
@@ -40,16 +44,56 @@ const app = createApp({
     },
     // 開啟刪除modal
     openDeleteModal(item) {
+      this.is_Edit = 2;
       this.itemList = item
       deleteModal.show()
     },
-
+    //關閉新增查找modal
     closeAddEditModal() {
       selectModal.hide()
     },
+    //關閉刪除modal
+    closeDeleteModal() {
+      deleteModal.hide()
+    },
+    // 開啟成功Modal
+    openSuccessModal(){
+      successModal.show()
+      setTimeout(() => {
+        successModal.hide()
+      }, 3000);
+    },
+    // 開啟失敗Modal
+    openErrorModal(){
+      errorModal.show()
+      setTimeout(() => {
+        errorModal.hide()
+      }, 5000);
+    },
 
 
+    // api操作
+    // push & put api
+    pushData(id) {
+      let url = `${this.apiUrl}/api/${this.path}/admin/product`
+      let methods = 'post'
 
+      if (this.is_Edit === 1) {
+        console.log(id);
+        url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
+        methods = 'put'
+      }
+      axios[methods](url, { data: this.itemList })
+        .then((res) => {
+          console.log(res.data);
+          closeAddEditModal();
+          this.openSuccessModal();
+        }).catch((err) => {
+          console.dir(err)
+          closeAddEditModal()
+          this.openErrorModal()
+        })
+    },
     //deleteApi
     deleteData(id) {
       const url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
@@ -60,26 +104,8 @@ const app = createApp({
           console.log(err);
         })
     },
-    // push&putapi
-    pushData(id) {
-      let url = `${this.apiUrl}/api/${this.path}/admin/product`
-      let methods = 'post'
-      if (this.is_Edit === 1) {
-        console.log(id);
-        url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
-        methods = 'put'
-      }
-      console.log(methods);
-      console.log({ data: this.itemList });
 
-      axios[methods](url, { data: this.itemList })
-        .then((res) => {
-          console.log(res.data);
-        }).catch((err) => {
-          console.dir(err)
-        })
 
-    },
 
     //登入驗證
     checkLogin() {
@@ -92,7 +118,8 @@ const app = createApp({
           window.location = 'index.html';
         })
     },
-    // 取得點擊項目資料
+
+    // 取得資料
     getProductList() {
       const url = `${this.apiUrl}/api/${this.path}/admin/products`
       axios.get(url)
@@ -104,6 +131,8 @@ const app = createApp({
           alert(err.data.message)
         })
     },
+
+
 
     // 登出
     LogOut() {
@@ -128,11 +157,14 @@ const app = createApp({
     this.checkLogin()
     console.log(token);
 
-    // datalistmodal
-    selectModal = new bootstrap.Modal(document.getElementById('selectModal'))
-    // deletemodal
-    deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'))
-
+    // add&edit modal
+    selectModal = new bootstrap.Modal(document.getElementById('selectModal'), { backdrop: 'static', keyboard: false })
+    // delete modal
+    deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), { backdrop: 'static', keyboard: false })
+    //successModal
+    successModal = new bootstrap.Modal(document.getElementById('successModal'))
+    // errorModal
+    errorModal = new bootstrap.Modal(document.getElementById('errorModal'))
   },
 })
 app.mount('#app')

@@ -49,7 +49,7 @@
     "source.fixAll.eslint": true
   },
   "[javascript]": {
-    "editor.defaultFormatter": "vscode.typescript-language-features"
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
   },
   "[html]": {
     "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
