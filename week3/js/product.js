@@ -17,25 +17,40 @@ const app = createApp({
     }
   },
   methods: {
+
+    // --modal區--
+
+    // 開啟新增商品modal按鈕
     addNewData() {
       this.is_Edit = 0;
       this.itemList = {
         imagesUrl: ['']
       };
-      this.clickModal();
+      selectModal.show()
+
     },
-    // 開啟查看或編輯頁面
+    // 開啟查看或編輯modal按鈕
     checkItem(item, index) {
-      this.itemList = item
-      if (this.itemList.quantity < 1) this.itemList.is_enabled = 2
       this.is_Edit = 1;
-      console.log(this.itemList.is_enabled);
+      this.itemList = item
+      // 判斷商品賣完了沒，還沒串購買頁面先這樣示範
+      if (this.itemList.quantity < 1) this.itemList.is_enabled = 2
+      selectModal.show()
+
     },
+    // 開啟刪除modal
     openDeleteModal(item) {
       this.itemList = item
       deleteModal.show()
     },
 
+    closeAddEditModal() {
+      selectModal.hide()
+    },
+
+
+
+    //deleteApi
     deleteData(id) {
       const url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
       axios.delete(url)
@@ -45,6 +60,7 @@ const app = createApp({
           console.log(err);
         })
     },
+    // push&putapi
     pushData(id) {
       let url = `${this.apiUrl}/api/${this.path}/admin/product`
       let methods = 'post'
@@ -65,7 +81,7 @@ const app = createApp({
 
     },
 
-
+    //登入驗證
     checkLogin() {
       const url = `${this.apiUrl}/api/user/check`
       axios.post(url)
@@ -76,7 +92,7 @@ const app = createApp({
           window.location = 'index.html';
         })
     },
-    // 取得資料
+    // 取得點擊項目資料
     getProductList() {
       const url = `${this.apiUrl}/api/${this.path}/admin/products`
       axios.get(url)
@@ -103,10 +119,7 @@ const app = createApp({
           })
       }
     },
-    // modal
-    clickModal() {
-      selectModal.show()
-    },
+
   },
   mounted() {
     // 取得token

@@ -1,0 +1,80 @@
+{
+  "editor.fontFamily": "FiraCode, 'Source Code Pro', Consolas, 'Courier New', monospace",
+  "editor.fontLigatures": true,
+  "editor.wordWrap": "on",
+  "editor.tabSize": 2,
+  "liveServer.settings.donotShowInfoMsg": true,
+  "diffEditor.wordWrap": "on",
+  "editor.fontSize": 16,
+  "workbench.settings.openDefaultSettings": true,
+  "workbench.colorTheme": "One Dark Pro Darker",
+  "html.format.wrapLineLength": 0,
+  "workbench.iconTheme": "material-icon-theme",
+  "editor.snippetSuggestions": "top",
+  "editor.tokenColorCustomizations": {
+    "comments": "#c0c0c0", //註解
+    // "keywords":"#fff",//關鍵字
+    "variables": "#f5e400" //變數
+    //"strings":"#fff",//字串
+    //"functions":"#FFF",//函式
+    //"number":"#FFF",//數字
+  },
+  "editor.renderWhitespace": "none",
+  "workbench.colorCustomizations": {
+    // 操作層
+    "editorIndentGuide.activeBackground": "#fff7b3ee",
+    // 背景層
+    "editorIndentGuide.background": "#83ff8d42"
+    //側邊拖曳bar背景
+    // "scrollbarSlider.background": "#ff0000",
+    //小地圖拖曳bar
+    // "minimapSlider.background": "#ff00ea",
+    //側邊拖曳bar滑鼠觸碰
+    // "scrollbarSlider.hoverBackground": "#ff0000",
+    //小地圖拖曳bar滑鼠觸碰
+    // "minimapSlider.hoverBackground": "",
+    //側邊拖曳bar點擊觸碰
+    // "scrollbarSlider.activeBackground": "#ff0000",
+    //小地圖bar點擊觸碰
+    // "minimapSlider.activeBackground": "",
+  },
+  "emmet.triggerExpansionOnTab": true,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "vue-html": "html",
+    "plaintext": "jade"
+  },
+  "files.autoSave": "onWindowChange",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "vscode.typescript-language-features"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+
+  // autoRenametag
+  "editor.linkedEditing": true,
+  //
+  "editor.guides.bracketPairs": true,
+  // 啟用成對括弧指引線
+  "editor.formatOnSave": true,
+  // 開啟功能  
+  "editor.bracketPairColorization.enabled": true,
+  // 設定顏色  
+  "workbench.colorCustomizations": {
+    // 層級括號顏色，從 1 至 6 層，此處只設定了 5 層  
+    "editorBracketHighlight.foreground1": "#5cd2da",
+    "editorBracketHighlight.foreground2": "#e2df2b",
+    "editorBracketHighlight.foreground3": "#15b0f8",
+    "editorBracketHighlight.foreground4": "#fda67d",
+    "editorBracketHighlight.foreground5": "#d69dd6",
+    // 異常括號的顏色，比如多出來的結尾括號  
+    "editorBracketHighlight.unexpectedBracket.foreground": "#ff0000",
+  },
+}
