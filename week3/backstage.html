@@ -55,6 +55,9 @@
           <h2 class="my-0">產品列表</h2>
           <p class="me-auto my-0">目前有 <span>{{productsList.length }}</span> 項產品</p>
           <button type="=button" class="btn btn-primary me-3" @click="addNewData()">新增產品</button>
+
+
+          <!-- 注意 -->
           <button type="=button" v-if="1" type="button" class="btn btn-secondary " disabled>刪除選取項目</button>
           <button type="=button" v-else type="button" class="btn btn-outline-danger ">刪除選取項目</button>
         </div>
@@ -87,13 +90,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item,index) in productsList" :key="item.id" class="">
+            <tr v-for="(item,index) in productsList" :key="item.id" class="align-middle">
               <label for="#input">
                 <td width="2%">
-                  <input type="checkbox" id="input">
+                  <input type="checkbox" id="input" @change="">
               </label>
               </td>
-              <td width="10%" class="align-middle">
+              <td width="10%" >
                 <div class="  d-flex justify-content-center align-items-center">
                   <div class="w-75 mx-0 my-auto">
                     <img class="" :src="item.imageUrl" alt="">
@@ -136,7 +139,7 @@
         <div class="modal-content ">
           <div class="modal-header ">
             <h5 class="modal-title" id="staticBackdropLabel">編輯商品</h5>
-            <button type="button" class="btn-close"  aria-label="Close" @click="closeAddEditModal()"></button>
+            <button type="button" class="btn-close"  aria-label="Close" @click="closeModal()"></button>
           </div>
 
           <div class="modal-body ">
@@ -218,7 +221,7 @@
             </div>
           </div>
           <div class="modal-footer ">
-            <button type="button" class="btn btn-secondary"  @click="closeAddEditModal()">返回</button>
+            <button type="button" class="btn btn-secondary"  @click="closeModal()">返回</button>
             <button type="button" class="btn btn-primary" @click="pushData(itemList.id)">送出</button>
           </div>
         </div>
@@ -241,7 +244,7 @@
           </div>
           <div class="modal-footer d-flex">
             <p class="me-auto">確認無誤後，請按下刪除鍵</p>
-            <button type="button" class="btn btn-secondary" @click="closeDeleteModal()">返回</button>
+            <button type="button" class="btn btn-secondary" @click="closeModal()">返回</button>
             <button type="button" class="btn btn-danger" @click="deleteData(itemList.id)">確定刪除</button>
           </div>
         </div>
@@ -249,42 +252,41 @@
     </div>
     <!-- successModal -->
     <div class="modal fade" id="successModal">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered ">
         <div class="modal-content">
           <div class="modal-header bg-success bg-opacity-25">
             <h5 class="modal-title">成功</h5>
           </div>
           <div class="modal-body">
-            <span v-if="is_Edit===0">新增資料</span>
-            <span v-else-if="is_Edit===1">更新資料</span>
-            <span v-else-if="is_Edit===2">刪除資料</span>
+            <span class="text-primary" v-if="is_Edit===0"> 新增資料 </span>
+            <span class="text-success" v-else-if="is_Edit===1"> 更新資料 </span>
+            <span class="text-danger" v-else-if="is_Edit===2"> 刪除資料 </span>
             <span>操作成功，五秒後自動重整頁面或是自行關閉</span>
           </div>
           <div class="modal-footer ">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" @click="closeResModal()">Close</button>
           </div>
         </div>
       </div>
     </div>
     <!-- errorModal -->
     <div class="modal fade" id="errorModal" >
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered ">
         <div class="modal-content">
-          <div class="modal-header ">
-            <h5 class="modal-title">錯誤</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          <div class="modal-header bg-danger">
+            <h5 class="modal-title text-light">錯誤</h5>
           </div>
           <div class="modal-body">
-            ...
+            <span class="text-danger"> 操作失敗 </span> 
+            <span>請重新操作一次，如果連續多次失敗，請聯絡管理員</span> 
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" @click="closeResModal()">Close</button>
           </div>
         </div>
       </div>
     </div>
-    <button type="button" @click="openSuccessModal()">test</button>
+    <button type="button" @click="openErrorModal()">test</button>
   </div>
 
 

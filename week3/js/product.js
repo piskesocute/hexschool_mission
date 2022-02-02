@@ -12,7 +12,6 @@ const app = createApp({
       apiUrl: 'https://vue3-course-api.hexschool.io/v2',
       path: 'evan-classuse',
       productsList: [],
-
       itemList: {
         imagesUrl: [''],
       },
@@ -38,26 +37,37 @@ const app = createApp({
       // 判斷商品賣完了沒，還沒串購買頁面先這樣示範
       if (this.itemList.quantity < 1) this.itemList.is_enabled = 2;
       selectModal.show();
-    },
+    }, 
     // 開啟刪除modal
     openDeleteModal(item) {
       this.is_Edit = 2;
       this.itemList = item;
       deleteModal.show();
     },
-    // 關閉新增查找modal
-    closeAddEditModal() {
-      selectModal.hide();
+
+    // 關閉彈出modal
+    closeModal(){
+      // 關閉新增查找
+      if(this.is_Edit<=1) {
+        console.log(this.is_Edit);
+        selectModal.hide();
+        // this.is_Edit=null;
+      }
+      // 關閉刪除查找
+      else if(this.is_Edit===2){
+        deleteModal.hide();
+        // this.is_Edit=null;
+      }
     },
-    // 關閉刪除modal
-    closeDeleteModal() {
-      deleteModal.hide();
+    openFinishModal(){
     },
     // 開啟成功Modal
     openSuccessModal() {
+      this.is_Edit=1
       successModal.show();
       setTimeout(() => {
         successModal.hide();
+        window.location.reload();
       }, 3000);
     },
     // 開啟失敗Modal
@@ -65,7 +75,14 @@ const app = createApp({
       errorModal.show();
       setTimeout(() => {
         errorModal.hide();
+        window.location.reload();
       }, 5000);
+      
+    },
+    // 關閉responseModal
+    closeResModal(){
+      clearTimeout();
+      window.location.reload();
     },
 
     // api操作
@@ -79,25 +96,27 @@ const app = createApp({
         url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`;
         methods = 'put';
       }
+      
       axios[methods](url, { data: this.itemList })
         .then((res) => {
-          console.log(res.data);
-          closeAddEditModal();
+          this.closeModal()
           this.openSuccessModal();
         }).catch((err) => {
-          console.dir(err);
-          closeAddEditModal();
+          this.closeModal()
           this.openErrorModal();
         });
     },
+
     // deleteApi
     deleteData(id) {
       const url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`;
       axios.delete(url)
         .then((res) => {
-          console.log(res.data);
+          this.closeModal()
+          this.openSuccessModal();
         }).catch((err) => {
-          console.log(err);
+          this.closeModal()
+          this.openErrorModal();
         });
     },
 
@@ -105,7 +124,7 @@ const app = createApp({
     checkLogin() {
       const url = `${this.apiUrl}/api/user/check`;
       axios.post(url)
-        .then((res) => {
+        .then(() => {
           this.getProductList();
         }).catch((err) => {
           alert(err.data.message);
@@ -154,9 +173,9 @@ const app = createApp({
     // delete modal
     deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), { backdrop: 'static', keyboard: false });
     // successModal
-    successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal = new bootstrap.Modal(document.getElementById('successModal'), { backdrop: 'static', keyboard: false });
     // errorModal
-    errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+    errorModal = new bootstrap.Modal(document.getElementById('errorModal'), { backdrop: 'static', keyboard: false });
   },
 });
 app.mount('#app');
