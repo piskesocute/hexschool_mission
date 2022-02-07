@@ -1,28 +1,35 @@
 import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js";
 
 
+
 let selectModal = "";
 let deleteModal = "";
 let successModal = "";
 let errorModal = '';
-
+let deletebatchModal = '';
+let Timer = ''
 const app = createApp({
   data() {
     return {
-      
+
       apiUrl: 'https://vue3-course-api.hexschool.io/v2',
       path: 'evan-classuse',
       productsList: [],
-      
+
       itemList: {
         imagesUrl: ['']
       },
       is_Edit: null,
+      deleteBatchArr:[],
     }
   },
   methods: {
-
     // --modal區--
+    // 1、新增
+    // 2、查找編輯
+    // 3、刪除
+    // 4、操作成功
+    // 5、操作失敗
 
     // 開啟新增商品modal按鈕
     addNewData() {
@@ -31,16 +38,14 @@ const app = createApp({
         imagesUrl: ['']
       };
       selectModal.show()
-
     },
     // 開啟查看或編輯modal按鈕
     checkItem(item) {
       this.is_Edit = 1;
       this.itemList = item
-      // 判斷商品賣完了沒，還沒串購買頁面先這樣示範
+      // 判斷商品數量，售完則將狀態改為2
       if (this.itemList.quantity < 1) this.itemList.is_enabled = 2
       selectModal.show()
-
     },
     // 開啟刪除modal
     openDeleteModal(item) {
@@ -48,29 +53,47 @@ const app = createApp({
       this.itemList = item
       deleteModal.show()
     },
-    //關閉新增查找modal
-    closeAddEditModal() {
-      selectModal.hide()
+    openDeletebatchModal(){
+      this.is_Edit = 3;
+      deletebatchModal.show();
     },
-    //關閉刪除modal
-    closeDeleteModal() {
-      deleteModal.hide()
-    },
-    // 開啟成功Modal
-    openSuccessModal(){
+    // 開啟操作成功Modal
+    openSuccessModal() {
       successModal.show()
-      setTimeout(() => {
+      Timer = setTimeout(() => {
         successModal.hide()
+        window.location.reload();
       }, 3000);
     },
-    // 開啟失敗Modal
-    openErrorModal(){
-      errorModal.show()
-      setTimeout(() => {
-        errorModal.hide()
-      }, 5000);
+    // 開啟操作失敗Modal
+    openErrorModal() {
+      errorModal.show();
     },
+    
 
+    // --modal區--
+    // 1、新增查找編輯刪除
+    // 2、操作成功
+    // 3、操作失敗
+
+    closeModal(){
+      if (this.is_Edit<=1){
+        selectModal.hide();
+      }else if(this.is_Edit===2){
+        deleteModal.hide();
+      }else if(this.is_Edit===3){
+        deletebatchModal.hide();
+      }
+    },
+    // 關閉操作成功
+    closeSuccessModal(){
+      clearTimeout(this.Timer);
+      successModal.hide()
+    },
+    // 關閉操作失敗
+    closeErrorModal(){
+      errorModal.hide()
+    },
 
     // api操作
     // push & put api
@@ -86,25 +109,47 @@ const app = createApp({
       axios[methods](url, { data: this.itemList })
         .then((res) => {
           console.log(res.data);
-          closeAddEditModal();
+          this.closeModal();
           this.openSuccessModal();
         }).catch((err) => {
           console.dir(err)
-          closeAddEditModal()
-          this.openErrorModal()
+          this.closeModal();
+          this.openErrorModal();
         })
     },
     //deleteApi
     deleteData(id) {
-      const url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
+      let url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
+      console.log(url);
       axios.delete(url)
         .then((res) => {
-          console.log(res.data);
+          
+          this.closeModal();
+          this.openSuccessModal()
         }).catch((err) => {
           console.log(err);
+          this.closeModal();
+          this.openErrorModal();
         })
     },
+    deleteBatchData(){
+      this.deleteBatchArr.forEach((item)=>{
+        let url = `${this.apiUrl}/api/${this.path}/admin/product/${item}`;
 
+        axios.delete(url)
+        .then((res) => {
+          console.log(res.data);
+          this.closeModal();
+          this.openSuccessModal()
+        }).catch((err) => {
+          console.log(err);
+          this.closeModal();
+          this.openErrorModal();
+        })
+      })
+      
+
+    },
 
 
     //登入驗證
@@ -148,8 +193,19 @@ const app = createApp({
           })
       }
     },
-
+    test(item){
+      let isInArr = this.deleteBatchArr.indexOf(item)
+      if (isInArr < 0) {
+        this.deleteBatchArr.push(item)
+      }else{
+        this.deleteBatchArr.splice(isInArr,1)
+      }
+      console.log("在陣列的",isInArr);
+      console.log("目前陣列內容",this.deleteBatchArr);
+    }
   },
+
+  
   mounted() {
     // 取得token
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)backstageCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
@@ -158,13 +214,15 @@ const app = createApp({
     console.log(token);
 
     // add&edit modal
-    selectModal = new bootstrap.Modal(document.getElementById('selectModal'), { backdrop: 'static', keyboard: false })
+    selectModal = new bootstrap.Modal(document.getElementById('selectModal'), { backdrop: 'static', keyboard: false });
     // delete modal
-    deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), { backdrop: 'static', keyboard: false })
+    deleteModal = new bootstrap.Modal(document.getElementById('deleteModal'), { backdrop: 'static', keyboard: false });
     //successModal
-    successModal = new bootstrap.Modal(document.getElementById('successModal'))
+    successModal = new bootstrap.Modal(document.getElementById('successModal'));
     // errorModal
-    errorModal = new bootstrap.Modal(document.getElementById('errorModal'))
+    errorModal = new bootstrap.Modal(document.getElementById('errorModal'));
+    //批量刪除
+    deletebatchModal = new bootstrap.Modal(document.getElementById('deletebatchModal'));
   },
 })
 app.mount('#app')

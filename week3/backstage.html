@@ -55,8 +55,8 @@
           <h2 class="my-0">產品列表</h2>
           <p class="me-auto my-0">目前有 <span>{{productsList.length }}</span> 項產品</p>
           <button type="=button" class="btn btn-primary me-3" @click="addNewData()">新增產品</button>
-          <button type="=button" v-if="1" type="button" class="btn btn-secondary " disabled>刪除選取項目</button>
-          <button type="=button" v-else type="button" class="btn btn-outline-danger ">刪除選取項目</button>
+          <button type="=button" type="button" v-if="deleteBatchArr.length == 0" class="btn btn-secondary " disabled>刪除選取項目</button>
+          <button v-else type="=button" type="button" class="btn btn-outline-danger" @click="openDeletebatchModal()">刪除選取項目</button>
         </div>
         <table class="table table-hover mt-4 text-center" class="">
           <thead>
@@ -90,7 +90,7 @@
             <tr v-for="(item,index) in productsList" :key="item.id" class="">
               <label for="#input">
                 <td width="2%">
-                  <input type="checkbox" id="input">
+                  <input type="checkbox" id="input" @change="test(item.id)">
               </label>
               </td>
               <td width="10%" class="align-middle">
@@ -121,9 +121,6 @@
               <td width="20% ">
                 <button type="button" class="btn btn-success me-3" @click="checkItem(item,index)" :data-id="index">查看/編輯</button>
                 <button type="button" class="btn btn-outline-danger " @click="openDeleteModal(item)" :data-id="index">刪除</button>
-
-
-
               </td>
             </tr>
           </tbody>
@@ -136,7 +133,7 @@
         <div class="modal-content ">
           <div class="modal-header ">
             <h5 class="modal-title" id="staticBackdropLabel">編輯商品</h5>
-            <button type="button" class="btn-close"  aria-label="Close" @click="closeAddEditModal()"></button>
+            <button type="button" class="btn-close" aria-label="Close" @click="closeModal()"></button>
           </div>
 
           <div class="modal-body ">
@@ -218,7 +215,7 @@
             </div>
           </div>
           <div class="modal-footer ">
-            <button type="button" class="btn btn-secondary"  @click="closeAddEditModal()">返回</button>
+            <button type="button" class="btn btn-secondary" @click="closeModal()">返回</button>
             <button type="button" class="btn btn-primary" @click="pushData(itemList.id)">送出</button>
           </div>
         </div>
@@ -233,16 +230,40 @@
           </div>
           <div class="modal-body my-3 ">
             <p class="fs-5 border-bottom border-2">準備刪除下列商品</p>
-            <span class="text-primary text-opacity-75">商品名稱：</span>
-            <p>{{itemList.title}}</p>
-            <span class="text-primary text-opacity-75">商品ID：</span>
-            <p>{{itemList.id}}</p>
-
+              <span class="text-primary text-opacity-75">商品名稱：</span>
+              <p>{{itemList.title}}</p>
+              <span class="text-primary text-opacity-75">商品ID：</span>
+              <p>{{itemList.id}}</p>
           </div>
           <div class="modal-footer d-flex">
             <p class="me-auto">確認無誤後，請按下刪除鍵</p>
-            <button type="button" class="btn btn-secondary" @click="closeDeleteModal()">返回</button>
+            <button type="button" class="btn btn-secondary" @click="closeModal()">返回</button>
             <button type="button" class="btn btn-danger" @click="deleteData(itemList.id)">確定刪除</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 批量刪除 -->
+    <div class="modal fade" id="deletebatchModal">
+      <div class="modal-dialog modal-dialog-centered ">
+        <div class="modal-content">
+          <div class="modal-header bg-danger">
+            <h5 class="modal-title fw-bolder text-light " id="exampleModalLabel">注意!</h5>
+          </div>
+          <div class="modal-body my-3 ">
+            <p class="fs-5 border-bottom border-2">準備刪除下列商品</p>
+              <p class="text-primary text-opacity-75">商品ID：</p>
+              <ol >
+                <template v-for="item, index in deleteBatchArr" :key="index">
+                  <li>{{item}}</li>
+                </template>
+                
+              </ol>
+          </div>
+          <div class="modal-footer d-flex">
+            <p class="me-auto">確認無誤後，請按下刪除鍵</p>
+            <button type="button" class="btn btn-secondary" @click="closeModal()">返回</button>
+            <button type="button" class="btn btn-danger" @click="deleteBatchData()">確定刪除</button>
           </div>
         </div>
       </div>
@@ -261,13 +282,13 @@
             <span>操作成功，五秒後自動重整頁面或是自行關閉</span>
           </div>
           <div class="modal-footer ">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-secondary" @click="closeSuccessModal()">關閉</button>
           </div>
         </div>
       </div>
     </div>
     <!-- errorModal -->
-    <div class="modal fade" id="errorModal" >
+    <div class="modal fade" id="errorModal">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header ">
@@ -275,11 +296,13 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ...
+            <span v-if="is_Edit===0">新增資料</span>
+            <span v-else-if="is_Edit===1">更新資料</span>
+            <span v-else-if="is_Edit===2">刪除資料</span>
+            <span>操作失敗，詳細請聯絡管理員(頁面需自行關閉)。</span>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
+            <button type="button" class="btn btn-secondary" @click="closeErrorModal()">關閉</button>
           </div>
         </div>
       </div>
