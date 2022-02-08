@@ -21,6 +21,10 @@ const app = createApp({
       },
       is_Edit: null,
       deleteBatchArr:[],
+      deleteBatchFinal:{
+        success:'',
+        error:'',
+      }
     }
   },
   methods: {
@@ -132,22 +136,71 @@ const app = createApp({
           this.openErrorModal();
         })
     },
-    deleteBatchData(){
-      this.deleteBatchArr.forEach((item)=>{
-        let url = `${this.apiUrl}/api/${this.path}/admin/product/${item}`;
 
-        axios.delete(url)
-        .then((res) => {
-          console.log(res.data);
-          this.closeModal();
-          this.openSuccessModal()
-        }).catch((err) => {
-          console.log(err);
-          this.closeModal();
-          this.openErrorModal();
+    deleteBatchData(){
+      this.deleteBatchArr.forEach(id => {
+        let url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`;
+        axios.delete(url).then((res)=>{
+          console.log(id);
+        }).catch(err=>{
+          console.dir(id)
         })
-      })
+      });
       
+
+
+
+      // let url = `${this.apiUrl}/api/${this.path}/admin/product/`
+      // let axiosArr = [];
+
+      // this.deleteBatchArr.forEach((item)=>{
+      //   axiosArr.push(`${this.apiUrl}/api/${this.path}/admin/product/${item}`)
+      // })
+
+      // console.log(axiosArr);
+
+
+      // axios.delete({
+        
+      //   url:this.deleteBatchArr,
+      //   baseURL:`${this.apiUrl}/api/${this.path}/admin/product/`
+        
+      // })
+      // .then((res) => {
+      //   console.log('成功');
+      //   this.closeModal();
+      //   this.openSuccessModal()
+      // }).catch((err) => {
+      //   console.log(err);
+      //   this.closeModal();
+      //   this.openErrorModal();
+      // })
+
+      // axios.delete(url, {
+      //   params:this.deleteBatchArr
+      // })
+      // .then((res) => {
+      //   console.log('成功');
+      //   this.closeModal();
+      //   this.openSuccessModal()
+      // }).catch((err) => {
+      //   console.log(err);
+      //   this.closeModal();
+      //   this.openErrorModal();
+      // })
+
+
+
+      // axios.delete(axiosArr)
+      //   .then((res) => {
+      //     console.log('成功');
+      //     this.closeModal();
+      //     this.openSuccessModal()
+      //   }).catch((err) => {
+      //     console.log(err);
+      //     this.closeModal();
+      //     this.openErrorModal();
+      //   })
 
     },
 
