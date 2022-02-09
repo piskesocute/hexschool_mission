@@ -10,8 +10,8 @@
   <script src='https://cdnjs.cloudflare.com/ajax/libs/axios/0.9.1/axios.min.js' integrity='sha512-Xk3wWei2TGrsh9kDSBKUMIjw/86sLUvhtnv9f7fOuIwhhiUTKz8szkWkzHthrM5Bb3Bu9idSzkxOrkzhcneuiw==' crossorigin='anonymous'></script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@100;300;400;500;700;900&family=Open+Sans&display=swap');
-    /* 
-    * {
+
+    /* * {
       outline: 1px solid #000;
     } */
 
@@ -61,36 +61,37 @@
         <table class="table table-hover mt-4 text-center" class="">
           <thead>
             <tr>
-              <th width="120">
+              <th width="">
+
               </th>
-              <th width="120">
+              <th width="">
                 預覽圖
               </th>
-              <th width="120">
+              <th width="">
                 產品名稱
               </th>
-              <th width="120">
+              <th width="">
                 產品類型
               </th>
-              <th width="120">
+              <th width="">
                 原價
               </th>
-              <th width="120">
+              <th width="">
                 售價
               </th>
-              <th width="120">
+              <th width="">
                 商品狀態
               </th>
-              <th width="120">
+              <th width="">
 
               </th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item,index) in productsList" :key="item.id" class="">
+            <tr v-for="(item,index) in productsList" :key="item.id" class="align-middle">
               <label for="#input">
-                <td width="2%">
-                  <input type="checkbox" id="input" @change="test(item.id)">
+                <td width="5%">
+                  <input type="checkbox" id="input" @change="checkItemInDeleteArr(item.id)" class="form-check-input" style="width: 20px; height: 20px;">
               </label>
               </td>
               <td width="10%" class="align-middle">
@@ -98,13 +99,12 @@
                   <div class="w-75 mx-0 my-auto">
                     <img class="" :src="item.imageUrl" alt="">
                   </div>
-
                 </div>
               </td>
-              <td width="">
+              <td width="" class="text-start">
                 {{item.title}}
               </td>
-              <td width="">
+              <td width="10%">
                 {{item.category}}
               </td>
               <td width="10%">{{item.origin_price}}</td>
@@ -143,14 +143,10 @@
                   新增圖片
                   <!-- 滾動要添加height -->
                   <div class="d-flex flex-column" style="height: 600px; overflow-y: scroll;">
-                    <div v-for="image in itemList.imagesUrl" :key="image" class="my-1 ps-0 pe-1 ">
-                      <div class="input-group mb-2">
-                        <input type="text" class="form-control " placeholder="請輸入圖片網址" aria-label="Recipient's username" aria-describedby="button-addon2" :value="image" style="float: left;">
-                        <button class="btn btn-primary" type="button" id="button-addon2">送出</button>
-                      </div>
-                      <div class="col-12">
-                        <img class="w-100" :src="image" alt="">
-                      </div>
+                    <div v-for="(image,key) in itemList.imagesUrl" :key="image" class="my-1 ps-0 pe-1 ">
+                      <img class="w-100" :src="itemList.imagesUrl[key]" alt="">
+                      <input type="text" class="form-control " placeholder="請輸入圖片網址" v-model="itemList.imagesUrl[key]" style="float: left;">
+                      <button class="btn btn-primary" type="button" id="button-addon2">送出</button>
                       <button v-if="image!==''" class="btn btn-danger col-12 mt-2" type="button" id="button-addon2">刪除</button>
                     </div>
                   </div>
@@ -230,10 +226,10 @@
           </div>
           <div class="modal-body my-3 ">
             <p class="fs-5 border-bottom border-2">準備刪除下列商品</p>
-              <span class="text-primary text-opacity-75">商品名稱：</span>
-              <p>{{itemList.title}}</p>
-              <span class="text-primary text-opacity-75">商品ID：</span>
-              <p>{{itemList.id}}</p>
+            <span class="text-primary text-opacity-75">商品名稱：</span>
+            <p>{{itemList.title}}</p>
+            <span class="text-primary text-opacity-75">商品ID：</span>
+            <p>{{itemList.id}}</p>
           </div>
           <div class="modal-footer d-flex">
             <p class="me-auto">確認無誤後，請按下刪除鍵</p>
@@ -252,13 +248,13 @@
           </div>
           <div class="modal-body my-3 ">
             <p class="fs-5 border-bottom border-2">準備刪除下列商品</p>
-              <p class="text-primary text-opacity-75">商品ID：</p>
-              <ol >
-                <template v-for="item, index in deleteBatchArr" :key="index">
-                  <li>{{item}}</li>
-                </template>
-                
-              </ol>
+            <p class="text-primary text-opacity-75">商品ID：</p>
+            <ol>
+              <template v-for="item, index in deleteBatchArr" :key="index">
+                <li>{{item}}</li>
+              </template>
+
+            </ol>
           </div>
           <div class="modal-footer d-flex">
             <p class="me-auto">確認無誤後，請按下刪除鍵</p>
@@ -270,7 +266,7 @@
     </div>
     <!-- successModal -->
     <div class="modal fade" id="successModal">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header bg-success bg-opacity-25">
             <h5 class="modal-title">成功</h5>
@@ -279,7 +275,8 @@
             <span v-if="is_Edit===0">新增資料</span>
             <span v-else-if="is_Edit===1">更新資料</span>
             <span v-else-if="is_Edit===2">刪除資料</span>
-            <span>操作成功，五秒後自動重整頁面或是自行關閉</span>
+            <span v-else-if="is_Edit===3">批量刪除</span>
+            <span>操作成功</span>
           </div>
           <div class="modal-footer ">
             <button type="button" class="btn btn-secondary" @click="closeSuccessModal()">關閉</button>
@@ -289,7 +286,7 @@
     </div>
     <!-- errorModal -->
     <div class="modal fade" id="errorModal">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header ">
             <h5 class="modal-title">錯誤</h5>
@@ -299,7 +296,7 @@
             <span v-if="is_Edit===0">新增資料</span>
             <span v-else-if="is_Edit===1">更新資料</span>
             <span v-else-if="is_Edit===2">刪除資料</span>
-            <span>操作失敗，詳細請聯絡管理員(頁面需自行關閉)。</span>
+            <span>操作失敗，詳細請聯絡管理員。</span>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" @click="closeErrorModal()">關閉</button>
@@ -307,7 +304,7 @@
         </div>
       </div>
     </div>
-    <button type="button" @click="openSuccessModal()">test</button>
+
   </div>
 
 

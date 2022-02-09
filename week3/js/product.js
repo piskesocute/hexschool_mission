@@ -7,7 +7,6 @@ let deleteModal = "";
 let successModal = "";
 let errorModal = '';
 let deletebatchModal = '';
-let Timer = ''
 const app = createApp({
   data() {
     return {
@@ -20,20 +19,20 @@ const app = createApp({
         imagesUrl: ['']
       },
       is_Edit: null,
-      deleteBatchArr:[],
-      deleteBatchFinal:{
-        success:'',
-        error:'',
-      }
+      deleteBatchArr: [],
     }
   },
   methods: {
-    // --modal區--
-    // 1、新增
-    // 2、查找編輯
-    // 3、刪除
-    // 4、操作成功
-    // 5、操作失敗
+    // 將checkbox 選取的商品送入刪除序列
+    checkItemInDeleteArr(item) {
+      let isInArr = this.deleteBatchArr.indexOf(item)
+      if (isInArr < 0) {
+        this.deleteBatchArr.push(item)
+      } else {
+        this.deleteBatchArr.splice(isInArr, 1)
+      }
+
+    },
 
     // 開啟新增商品modal按鈕
     addNewData() {
@@ -57,46 +56,40 @@ const app = createApp({
       this.itemList = item
       deleteModal.show()
     },
-    openDeletebatchModal(){
+    openDeletebatchModal() {
       this.is_Edit = 3;
       deletebatchModal.show();
     },
     // 開啟操作成功Modal
     openSuccessModal() {
-      successModal.show()
-      Timer = setTimeout(() => {
-        successModal.hide()
-        window.location.reload();
-      }, 3000);
+      successModal.show();
     },
     // 開啟操作失敗Modal
     openErrorModal() {
       errorModal.show();
     },
-    
 
-    // --modal區--
-    // 1、新增查找編輯刪除
-    // 2、操作成功
-    // 3、操作失敗
-
-    closeModal(){
-      if (this.is_Edit<=1){
+    // 關閉增刪查找modal
+    closeModal() {
+      if (this.is_Edit <= 1) {
         selectModal.hide();
-      }else if(this.is_Edit===2){
+      } else if (this.is_Edit === 2) {
         deleteModal.hide();
-      }else if(this.is_Edit===3){
+      } else if (this.is_Edit === 3) {
+        deletebatchModal.hide();
+      } else if (this.is_Edit === 4) {
         deletebatchModal.hide();
       }
     },
     // 關閉操作成功
-    closeSuccessModal(){
-      clearTimeout(this.Timer);
-      successModal.hide()
+    closeSuccessModal() {
+      successModal.hide();
+      window.location.reload();
     },
     // 關閉操作失敗
-    closeErrorModal(){
-      errorModal.hide()
+    closeErrorModal() {
+      errorModal.hide();
+      window.location.reload();
     },
 
     // api操作
@@ -127,7 +120,7 @@ const app = createApp({
       console.log(url);
       axios.delete(url)
         .then((res) => {
-          
+
           this.closeModal();
           this.openSuccessModal()
         }).catch((err) => {
@@ -137,71 +130,25 @@ const app = createApp({
         })
     },
 
-    deleteBatchData(){
+    deleteBatchData() {
+      let deleteFinish = 0
       this.deleteBatchArr.forEach(id => {
-        let url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`;
-        axios.delete(url).then((res)=>{
-          console.log(id);
-        }).catch(err=>{
-          console.dir(id)
-        })
+        let index = id
+        let url = `${this.apiUrl}/api/${this.path}/admin/product/${index}`;
+        axios.delete(url)
+          .then((res) => {
+            deleteFinish++;
+          }).catch(err => {
+          })
+
       });
-      
-
-
-
-      // let url = `${this.apiUrl}/api/${this.path}/admin/product/`
-      // let axiosArr = [];
-
-      // this.deleteBatchArr.forEach((item)=>{
-      //   axiosArr.push(`${this.apiUrl}/api/${this.path}/admin/product/${item}`)
-      // })
-
-      // console.log(axiosArr);
-
-
-      // axios.delete({
-        
-      //   url:this.deleteBatchArr,
-      //   baseURL:`${this.apiUrl}/api/${this.path}/admin/product/`
-        
-      // })
-      // .then((res) => {
-      //   console.log('成功');
-      //   this.closeModal();
-      //   this.openSuccessModal()
-      // }).catch((err) => {
-      //   console.log(err);
-      //   this.closeModal();
-      //   this.openErrorModal();
-      // })
-
-      // axios.delete(url, {
-      //   params:this.deleteBatchArr
-      // })
-      // .then((res) => {
-      //   console.log('成功');
-      //   this.closeModal();
-      //   this.openSuccessModal()
-      // }).catch((err) => {
-      //   console.log(err);
-      //   this.closeModal();
-      //   this.openErrorModal();
-      // })
-
-
-
-      // axios.delete(axiosArr)
-      //   .then((res) => {
-      //     console.log('成功');
-      //     this.closeModal();
-      //     this.openSuccessModal()
-      //   }).catch((err) => {
-      //     console.log(err);
-      //     this.closeModal();
-      //     this.openErrorModal();
-      //   })
-
+      // 判斷API是否全部操作成功
+      this.closeModal();
+      if (deleteFinish + 1 === this.deleteBatchArr.length) {
+        this.openSuccessModal();
+      } else {
+        this.openErrorModal();
+      }
     },
 
 
@@ -230,8 +177,6 @@ const app = createApp({
         })
     },
 
-
-
     // 登出
     LogOut() {
       const urlLogout = `${this.apiUrl}/logout`;
@@ -246,19 +191,9 @@ const app = createApp({
           })
       }
     },
-    test(item){
-      let isInArr = this.deleteBatchArr.indexOf(item)
-      if (isInArr < 0) {
-        this.deleteBatchArr.push(item)
-      }else{
-        this.deleteBatchArr.splice(isInArr,1)
-      }
-      console.log("在陣列的",isInArr);
-      console.log("目前陣列內容",this.deleteBatchArr);
-    }
   },
 
-  
+
   mounted() {
     // 取得token
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)backstageCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
