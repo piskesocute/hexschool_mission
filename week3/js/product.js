@@ -22,6 +22,7 @@ const app = createApp({
     }
   },
   methods: {
+
     //modal區
     // 開啟新增商品modal按鈕
     addNewData() {
@@ -117,9 +118,13 @@ const app = createApp({
           this.openErrorModal();
         })
     },
+    // 問題
     //批量刪除
     deleteBatchData() {
+
+      // 1、設定一個變數來乘載成功接收delete
       let deleteFinish = 0
+      // 2、forEach 把有check的商品id送入 delete api
       this.deleteBatchArr.forEach(id => {
         let index = id
         let url = `${this.apiUrl}/api/${this.path}/admin/product/${index}`;
@@ -134,12 +139,10 @@ const app = createApp({
           })
       });
 
-      console.log('finish', this.deleteBatchArr.length);
-      console.log('finish', deleteFinish);
-      // //判斷批量刪除是否全部正確 否則開啟錯誤視窗
+      // 關閉視窗
       this.closeModal();
-
-
+      
+      //判斷批量刪除是否全部正確 否則開啟錯誤視窗
       if (deleteFinish + 1 === this.deleteBatchArr.length) {
         this.openSuccessModal();
       } else {
@@ -157,7 +160,6 @@ const app = createApp({
       } else {
         this.deleteBatchArr.splice(isInArr, 1)
       }
-
     },
 
     //登入驗證
@@ -168,7 +170,6 @@ const app = createApp({
           this.getProductList()
         }).catch((err) => {
           alert(err.data.message)
-          window.location = 'index.html';
         })
     },
 
