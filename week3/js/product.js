@@ -118,6 +118,7 @@ const app = createApp({
           this.openErrorModal();
         })
     },
+
     // 問題
     //批量刪除
     deleteBatchData() {
