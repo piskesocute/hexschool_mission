@@ -140,7 +140,7 @@
                   新增圖片
                   <!-- 滾動要添加height -->
                   <div class="d-flex flex-column" style="height: 600px; overflow-y: scroll;">
-                    <div v-for="(image,key) in itemList.imagesUrl" :key="image" class="my-1 ps-0 pe-1 fw-normal fs-6">
+                    <div v-for="(image,key) in itemList.imagesUrl" :key="image" class="my-3 ps-0 pe-1 pb-3 fw-normal fs-6 border-bottom">
                       <span class="">第{{key+1}}張</span>
                       <span class="ms-3 text-primary" v-if="key==0"> 此為主圖</span>
                       <div class="w-100 d-flex p-2">
@@ -165,7 +165,7 @@
                   <div class="row ps-3 mb-2">
                     <div class="">
                       <label for="productName" class="form-label h5 fw-bold mb-1">產品名稱</label>
-                      <input type="text" class="form-control" id="productName" placeholder="請輸入商品名稱，如 含笑半步顛、我愛一條柴" v-model="itemList.title">
+                      <input type="text" class="form-control" id="productName" placeholder="請輸入商品名稱" v-model="itemList.title">
                     </div>
                   </div>
                   <div class="row ps-3 mb-2">

@@ -34,8 +34,9 @@ const app = createApp({
     },
     // 開啟查看或編輯modal按鈕
     checkItem(item) {
+      console.log(item);
       this.is_Edit = 1;
-      this.itemList = item
+      this.itemList = JSON.parse(JSON.stringify(item))
       // 判斷商品數量，售完則將狀態改為2
       if (this.itemList.quantity < 1) this.itemList.is_enabled = 2
       selectModal.show()
@@ -60,6 +61,7 @@ const app = createApp({
     },
     // 關閉增刪查找modal
     closeModal() {
+      this.itemList
       if (this.is_Edit <= 1) {
         selectModal.hide();
       } else if (this.is_Edit === 2) {
