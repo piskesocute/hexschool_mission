@@ -1,12 +1,11 @@
 import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js";
 
-
-
 let selectModal = "";
 let deleteModal = "";
 let successModal = "";
 let errorModal = '';
 let deletebatchModal = '';
+
 const app = createApp({
   data() {
     return {
@@ -16,7 +15,7 @@ const app = createApp({
       productsList: [],
 
       itemList: {
-        imagesUrl: ['']
+        imagesUrl: [],
       },
       is_Edit: null,
       deleteBatchArr: [],
@@ -114,7 +113,7 @@ const app = createApp({
           this.openErrorModal();
         })
     },
-    //deleteApi
+    //刪除deleteApi
     deleteData(id) {
       let url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
       console.log(url);
@@ -129,7 +128,7 @@ const app = createApp({
           this.openErrorModal();
         })
     },
-
+    //批量刪除
     deleteBatchData() {
       let deleteFinish = 0
       this.deleteBatchArr.forEach(id => {
@@ -142,7 +141,8 @@ const app = createApp({
           })
 
       });
-      // 判斷API是否全部操作成功
+
+      // 判斷API是否全部操作成功來決定彈出視窗
       this.closeModal();
       if (deleteFinish + 1 === this.deleteBatchArr.length) {
         this.openSuccessModal();
