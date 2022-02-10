@@ -22,17 +22,7 @@ const app = createApp({
     }
   },
   methods: {
-    // 將checkbox 選取的商品送入刪除序列
-    checkItemInDeleteArr(item) {
-      let isInArr = this.deleteBatchArr.indexOf(item)
-      if (isInArr < 0) {
-        this.deleteBatchArr.push(item)
-      } else {
-        this.deleteBatchArr.splice(isInArr, 1)
-      }
-
-    },
-
+    //modal區
     // 開啟新增商品modal按鈕
     addNewData() {
       this.is_Edit = 0;
@@ -67,7 +57,6 @@ const app = createApp({
     openErrorModal() {
       errorModal.show();
     },
-
     // 關閉增刪查找modal
     closeModal() {
       if (this.is_Edit <= 1) {
@@ -91,12 +80,12 @@ const app = createApp({
       window.location.reload();
     },
 
+
     // api操作
     // push & put api
     pushData(id) {
       let url = `${this.apiUrl}/api/${this.path}/admin/product`
       let methods = 'post'
-
       if (this.is_Edit === 1) {
         console.log(id);
         url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
@@ -137,20 +126,39 @@ const app = createApp({
         axios.delete(url)
           .then((res) => {
             deleteFinish++;
-          }).catch(err => {
-          })
+            console.log(res);
+            console.log('axios', deleteFinish);
 
+          }).catch(err => {
+            console.log(err);
+          })
       });
 
-      // 判斷API是否全部操作成功來決定彈出視窗
+      console.log('finish', this.deleteBatchArr.length);
+      console.log('finish', deleteFinish);
+      // //判斷批量刪除是否全部正確 否則開啟錯誤視窗
       this.closeModal();
+
+
       if (deleteFinish + 1 === this.deleteBatchArr.length) {
         this.openSuccessModal();
       } else {
         this.openErrorModal();
       }
+
+
     },
 
+    // 將checkbox 選取的商品送入刪除序列
+    checkItemInDeleteArr(item) {
+      let isInArr = this.deleteBatchArr.indexOf(item)
+      if (isInArr < 0) {
+        this.deleteBatchArr.push(item)
+      } else {
+        this.deleteBatchArr.splice(isInArr, 1)
+      }
+
+    },
 
     //登入驗證
     checkLogin() {
