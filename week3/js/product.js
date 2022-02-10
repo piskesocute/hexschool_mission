@@ -180,7 +180,7 @@ const app = createApp({
       axios.get(url)
         .then((res) => {
           this.productsList = res.data.products
-          console.log(this.productsList);
+
         })
         .catch((err) => {
           alert(err.data.message)
@@ -209,7 +209,6 @@ const app = createApp({
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)backstageCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     axios.defaults.headers.common['Authorization'] = token;
     this.checkLogin()
-    console.log(token);
 
     // add&edit modal
     selectModal = new bootstrap.Modal(document.getElementById('selectModal'), { backdrop: 'static', keyboard: false });
