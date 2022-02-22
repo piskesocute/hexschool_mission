@@ -93,11 +93,13 @@
                   <input type="checkbox" id="input" @change="checkItemInDeleteArr(item.id)" class="form-check-input" style="width: 20px; height: 20px;">
               </label>
               </td>
+              問題在這裡
               <td width="10%" class="align-middle">
                 <div class="  d-flex justify-content-center align-items-center">
                   <div class="w-75 mx-0 my-auto">
                     <img v-if="item.imageUrl" class="" :src="item.imageUrl" alt="">
-                    <img v-else class="" :src="item.imagesUrl[0]" alt="">
+                    <img v-else-if="!item.imageUrl && item.imagesUrl" class="" :src="item.imagesUrl[0]" alt="">
+                    <span v-else >無圖片</>
                   </div>
                 </div>
               </td>
@@ -154,7 +156,7 @@
                         type="button" 
                         id="button-addon2"
                         @click="itemList.imagesUrl.splice(key,1)"
-                        :disabled="itemList.imagesUrl[key]=='' || itemList.imagesUrl.length-1 == 0"
+                        :disabled="itemList.imagesUrl[key]=='' || itemList.imagesUrl?.length-1 <= 0"
                         >刪除</button>
                       </div>
                       <img class="w-100" :src="itemList.imagesUrl[key]" alt="">
@@ -230,8 +232,7 @@
               id="button-addon2"
               :disabled="!itemList.imagesUrl[itemList.imagesUrl.length - 1]"
               @click="itemList.imagesUrl.push('')"
-              >新增圖片</button>
-              
+              >新增圖片</button>           
             </div>
             <div class="d-flex justify-content-between col-3 ">
             <button type="button" class="btn btn-secondary col-4" @click="closeModal()">返回</button>
@@ -277,7 +278,6 @@
               <template v-for="item, index in deleteBatchArr" :key="index+123123">
                 <li>{{item}}</li>
               </template>
-
             </ol>
           </div>
           <div class="modal-footer d-flex">
@@ -330,8 +330,6 @@
     </div>
 
   </div>
-
-
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
   <script src="./js/product.js" type="module"></script>

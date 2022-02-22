@@ -36,9 +36,15 @@ const app = createApp({
     checkItem(item) {
       console.log(item);
       this.is_Edit = 1;
+
       this.itemList = JSON.parse(JSON.stringify(item))
       // 判斷商品數量，售完則將狀態改為2
       if (this.itemList.quantity < 1) this.itemList.is_enabled = 2
+      if (!this.itemList.imagesUrl) {
+        this.itemList.imagesUrl = [''];
+        console.log(this.itemList);
+      }
+
       selectModal.show()
     },
     // 開啟刪除modal
@@ -61,7 +67,7 @@ const app = createApp({
     },
     // 關閉增刪查找modal
     closeModal() {
-      this.itemList
+      
       if (this.is_Edit <= 1) {
         selectModal.hide();
       } else if (this.is_Edit === 2) {
@@ -186,6 +192,8 @@ const app = createApp({
         })
         .catch((err) => {
           alert(err.data.message)
+          
+          window.location.href="./index.html"
         })
     },
 
