@@ -76,12 +76,13 @@ const app = createApp({
     // 關閉操作成功
     closeSuccessModal() {
       successModal.hide();
-      window.location.reload();
+      this.getProductList();
+      
     },
     // 關閉操作失敗
     closeErrorModal() {
       errorModal.hide();
-      window.location.reload();
+      this.getProductList();
     },
     // api操作
     // push & put api

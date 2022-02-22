@@ -142,7 +142,7 @@
                   新增圖片
                   <!-- 滾動要添加height -->
                   <div class="d-flex flex-column" style="height: 600px; overflow-y: scroll;">
-                    <div v-for="(image,key) in itemList.imagesUrl" :key="image" class="my-3 ps-0 pe-1 pb-3 fw-normal fs-6 border-bottom">
+                    <div v-for="(image,key) in itemList.imagesUrl" :key="image+132152" class="my-3 ps-0 pe-1 pb-3 fw-normal fs-6 border-bottom">
                       <span class="">第{{key+1}}張</span>
                       <span class="ms-3 text-primary" v-if="key==0"> 此為主圖</span>
                       <div class="w-100 d-flex p-2">
