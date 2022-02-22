@@ -9,16 +9,15 @@ let deletebatchModal = '';
 const app = createApp({
   data() {
     return {
-
       apiUrl: 'https://vue3-course-api.hexschool.io/v2',
       path: 'evan-classuse',
       productsList: [],
-
       itemList: {
         imagesUrl: [],
       },
       is_Edit: null,
       deleteBatchArr: [],
+      deletebatcherrdata:[],
     }
   },
   methods: {
@@ -30,21 +29,17 @@ const app = createApp({
       this.itemList = {
         imagesUrl: ['']
       };
-      selectModal.show()
+      selectModal.show();
     },
     // 開啟查看或編輯modal按鈕
     checkItem(item) {
-      console.log(item);
       this.is_Edit = 1;
-
-      this.itemList = JSON.parse(JSON.stringify(item))
+      this.itemList = JSON.parse(JSON.stringify(item));
       // 判斷商品數量，售完則將狀態改為2
-      if (this.itemList.quantity < 1) this.itemList.is_enabled = 2
+      if (this.itemList.quantity < 1) this.itemList.is_enabled = 2;
       if (!this.itemList.imagesUrl) {
         this.itemList.imagesUrl = [''];
-        console.log(this.itemList);
       }
-
       selectModal.show()
     },
     // 開啟刪除modal
@@ -88,25 +83,20 @@ const app = createApp({
       errorModal.hide();
       window.location.reload();
     },
-
-
     // api操作
     // push & put api
     pushData(id) {
       let url = `${this.apiUrl}/api/${this.path}/admin/product`
       let methods = 'post'
       if (this.is_Edit === 1) {
-        console.log(id);
         url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
         methods = 'put'
       }
       axios[methods](url, { data: this.itemList })
         .then((res) => {
-          console.log(res.data);
           this.closeModal();
           this.openSuccessModal();
         }).catch((err) => {
-          console.dir(err)
           this.closeModal();
           this.openErrorModal();
         })
@@ -114,53 +104,35 @@ const app = createApp({
     //刪除deleteApi
     deleteData(id) {
       let url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`
-      console.log(url);
       axios.delete(url)
         .then((res) => {
-
           this.closeModal();
           this.openSuccessModal()
         }).catch((err) => {
-          console.log(err);
           this.closeModal();
           this.openErrorModal();
         })
     },
-
     // 問題
     //批量刪除
-    deleteBatchData() {
-
-      // 1、設定一個變數來乘載成功接收delete
+    async deleteBatchData() {
       let deleteFinish = 0
-      // 2、forEach 把有check的商品id送入 delete api
-      this.deleteBatchArr.forEach(id => {
-        let index = id
-        let url = `${this.apiUrl}/api/${this.path}/admin/product/${index}`;
-        axios.delete(url)
-          .then((res) => {
-            deleteFinish++;
-            console.log(res);
-            console.log('axios', deleteFinish);
-
-          }).catch(err => {
-            console.log(err);
-          })
-      });
-
-      // 關閉視窗
+      for(let id of this.deleteBatchArr){
+        let url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`;
+        try{
+          await axios.delete(url);
+          deleteFinish++;
+        }catch(err){
+          this.deletebatcherrdata.push(`${id}`)
+        }
+      }
       this.closeModal();
-      
-      //判斷批量刪除是否全部正確 否則開啟錯誤視窗
-      if (deleteFinish + 1 === this.deleteBatchArr.length) {
+      if (deleteFinish === this.deleteBatchArr.length) {
         this.openSuccessModal();
       } else {
         this.openErrorModal();
       }
-
-
     },
-
     // 將checkbox 選取的商品送入刪除序列
     checkItemInDeleteArr(item) {
       let isInArr = this.deleteBatchArr.indexOf(item)
@@ -170,7 +142,6 @@ const app = createApp({
         this.deleteBatchArr.splice(isInArr, 1)
       }
     },
-
     //登入驗證
     checkLogin() {
       const url = `${this.apiUrl}/api/user/check`
@@ -181,14 +152,12 @@ const app = createApp({
           alert(err.data.message)
         })
     },
-
     // 取得資料
     getProductList() {
       const url = `${this.apiUrl}/api/${this.path}/admin/products`
       axios.get(url)
         .then((res) => {
           this.productsList = res.data.products
-
         })
         .catch((err) => {
           alert(err.data.message)
@@ -196,7 +165,6 @@ const app = createApp({
           window.location.href="./index.html"
         })
     },
-
     // 登出
     LogOut() {
       const urlLogout = `${this.apiUrl}/logout`;
@@ -212,14 +180,11 @@ const app = createApp({
       }
     },
   },
-
-
   mounted() {
     // 取得token
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)backstageCookie\s*\=\s*([^;]*).*$)|^.*$/, "$1");
     axios.defaults.headers.common['Authorization'] = token;
     this.checkLogin()
-
     // add&edit modal
     selectModal = new bootstrap.Modal(document.getElementById('selectModal'), { backdrop: 'static', keyboard: false });
     // delete modal
