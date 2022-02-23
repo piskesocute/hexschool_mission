@@ -3,7 +3,7 @@ export default {
 
   template: `
   <nav aria-label="Page navigation example">
-    <ul class="pagination">
+    <ul class="pagination m-0 p-0">
       <!-- 上一頁  -->
       <li 
       class="page-item" 

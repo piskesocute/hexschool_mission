@@ -42,47 +42,53 @@
 <body>
   <div id="app">
     <div class="container">
-      <div class="row py-3 flex-nowrap justify-content-between w-100">
+      <div class="row py-2 flex-nowrap justify-content-between w-100">
         <div class="d-flex align-items-center">
           <h1>後台管理系統</h1>
 
           <button type="button" class="btn btn-outline-danger ms-auto border-2 fw-bold" @click="LogOut">Log out</button>
         </div>
       </div>
-      <div class="row py-3 border-top border-3 ">
+      <div class="row py-1 border-top border-3 ">
       </div>
       <div class="row">
-        <div class="d-flex justify-content-between align-items-center text-center">
+        <div class="d-flex justify-content-between align-items-center ">
           <h2 class="my-0">產品列表</h2>
-          <p class="me-auto my-0">目前有 <span>{{productsList.length }}</span> 項產品</p>
+            <p class="me-auto mt-3 mb-0 ">目前有 <span class="text-primary">{{productsList.length }}</span> 項產品</p>
+            <div class="me-auto" >
+
+          <pagenation :pages="pagination" @change-page="getProductList">
+          </pagenation>
+        </div>
+
           <button type="=button" class="btn btn-primary me-3" @click="addNewData()">新增產品</button>
           <button type="=button" type="button" v-if="deleteBatchArr.length == 0" class="btn btn-secondary " disabled>刪除選取項目</button>
           <button v-else type="=button" type="button" class="btn btn-outline-danger" @click="openDeletebatchModal()">刪除選取項目</button>
         </div>
-        <table class="table table-hover mt-4 text-center" class="">
+        <table class="table table-hover mt-2 text-center" class="">
           <thead>
-            <tr>
-              <th width="">
+            <tr class="">
+              <th class="py-1">
               </th>
-              <th width="">
+              <th class="py-1">
                 預覽圖
               </th>
-              <th width="">
+              <th class="py-1">
                 產品名稱
               </th>
-              <th width="">
+              <th class="py-1">
                 產品類型
               </th>
-              <th width="">
+              <th class="py-1">
                 原價
               </th>
-              <th width="">
+              <th class="py-1">
                 售價
               </th>
-              <th width="">
+              <th class="py-1">
                 商品狀態
               </th>
-              <th width="">
+              <th class="py-1">
               </th>
             </tr>
           </thead>
@@ -124,200 +130,82 @@
             </tr>
           </tbody>
         </table>
-        <pagenation :pages="pagination" @change-page="getProductList">
-        </pagenation>
       </div>
     </div>
     <!-- Add&Edit modal -->
     <div class="modal fade" id="selectModal">
-      <div class="modal-dialog modal-xl ">
-        <div class="modal-content ">
-          <div class="modal-header ">
-            <h5 class="modal-title" id="staticBackdropLabel">編輯商品</h5>
-            <button type="button" class="btn-close" aria-label="Close" @click="closeModal()"></button>
-          </div>
-          <div class="modal-body ">
-            <div class="container-fluid">
-              <div class="d-flex">
-                <div class="col-5 h5 fw-bold mb-1">
-                  新增圖片
-                  <!-- 滾動要添加height -->
-                  <div class="d-flex flex-column" style="height: 600px; overflow-y: scroll;">
-                    <div v-for="(image,key) in itemList.imagesUrl" :key="image+132152" class="my-3 ps-0 pe-1 pb-3 fw-normal fs-6 border-bottom">
-                      <span class="">第{{key+1}}張</span>
-                      <span class="ms-3 text-primary" v-if="key==0"> 此為主圖</span>
-                      <div class="w-100 d-flex p-2">
-                        <input type="text" class="form-control flex-grow-1" v-model.lazy.trim="itemList.imagesUrl[key]" style="float: left;">
-                        <button class="btn btn-danger col-2 ms-2" type="button" id="button-addon2" @click="itemList.imagesUrl.splice(key,1)" :disabled="itemList.imagesUrl[key]=='' || itemList.imagesUrl?.length-1 <= 0">刪除</button>
-                      </div>
-                      <img class="w-100" :src="itemList.imagesUrl[key]" alt="">
-                    </div>
-                  </div>
-                </div>
-                <div class="col-7 ">
-                  <div class="row ps-3 mb-2">
-                    <div class="">
-                      <label for="productName" class="form-label h5 fw-bold mb-1">產品名稱</label>
-                      <input type="text" class="form-control" id="productName" placeholder="請輸入商品名稱" v-model="itemList.title">
-                    </div>
-                  </div>
-                  <div class="row ps-3 mb-2">
-                    <div class="col-4 ">
-                      <label for="productType" class="form-label h5 fw-bold mb-1">產品分類</label>
-                      <input type="text" class="form-control" id="productType" placeholder="請輸入產品分類:" v-model="itemList.category">
-                    </div>
-                    <div class="col-4 ">
-                      <label for="productEnable" class="form-label h5 fw-bold mb-1">產品狀態</label>
-                      <select class="form-select" aria-label="Default select example" id="productEnable" v-model.number="itemList.is_enabled">
-                        <option selected>請選擇產品狀態</option>
-                        <option value="0">下架 </option>
-                        <option value="1">上架 </option>
-                        <option value="2">售完 </option>
-                      </select>
-                    </div>
-
-                    <div class="col-4">
-                      <label for="Price" class="form-label h5 fw-bold mb-1">商品單位</label>
-                      <input type="text" class="form-control" id="Price" placeholder="商品單位" v-model="itemList.unit">
-                    </div>
-                  </div>
-                  <div class="row ps-3 mb-2">
-                    <div class="col-4">
-                      <label for="originPrice" class="form-label h5 fw-bold mb-1">原價</label>
-                      <input type="number" class="form-control " id="originPrice" placeholder="元" v-model="itemList.origin_price">
-                    </div>
-                    <div class="col-4 ">
-                      <label for="Price" class="form-label h5 fw-bold mb-1">售價</label>
-                      <input type="number" class="form-control" id="Price" placeholder="元" v-model="itemList.price">
-                    </div>
-                    <div class="col-4 ">
-                      <label for="Price" class="form-label h5 fw-bold mb-1">庫存數量</label>
-                      <input type="number" class="form-control" id="Price" placeholder="商品單位" v-model="itemList.quantity">
-                    </div>
-
-                  </div>
-                  <div class="row ps-3 mb-2">
-                    <div class=" col-12 ">
-                      <label for="productContent" class="form-label h5 fw-bold mb-1">商品內容</label>
-                      <textarea class="form-control overflow-auto align-self-stretch" placeholder="商品內容" id="productContent" v-model="itemList.content" style="height:100px;resize: none;text-align: justify;"></textarea>
-                    </div>
-                  </div>
-                  <div class="row ps-3 mb-2">
-                    <div class=" col-12 ">
-                      <label for="productContent" class="form-label h5 fw-bold mb-1">商品描述</label>
-                      <textarea v-model="itemList.description" class="form-control overflow-auto align-self-stretch " placeholder="請詳細描述商品" id="productContent" style="height:200px;resize: none; text-align: justify;"></textarea>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-
-
-          <div class="modal-footer ">
-            <div class="col-3 px-3 me-auto ">
-              <button class="btn btn-primary w-100" type="button" id="button-addon2" :disabled="!itemList.imagesUrl[itemList.imagesUrl.length - 1]" @click="itemList.imagesUrl.push('')">新增圖片</button>
-            </div>
-            <div class="d-flex justify-content-between col-3 ">
-              <button type="button" class="btn btn-secondary col-4" @click="closeModal()">返回</button>
-              <button type="button" class="btn btn-primary col-6" @click="pushData(itemList.id)">送出</button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <addeditmodal
+      :item-list="itemList"
+      :api-obj="apiObj"
+      :is_-edit="is_Edit"
+      @close-modal="closeModal"
+      @open-success-modal="openSuccessModal"
+      @open-error-modal="openErrorModal"
+      ></addeditmodal>
     </div>
+
     <!-- delete modal -->
     <div class="modal fade" id="deleteModal">
-      <div class="modal-dialog modal-dialog-centered ">
-        <div class="modal-content">
-          <div class="modal-header bg-danger">
-            <h5 class="modal-title fw-bolder text-light " id="exampleModalLabel">注意!</h5>
-          </div>
-          <div class="modal-body my-3 ">
-            <p class="fs-5 border-bottom border-2">準備刪除下列商品</p>
-            <span class="text-primary text-opacity-75">商品名稱：</span>
-            <p>{{itemList.title}}</p>
-            <span class="text-primary text-opacity-75">商品ID：</span>
-            <p>{{itemList.id}}</p>
-          </div>
-          <div class="modal-footer d-flex">
-            <p class="me-auto">確認無誤後，請按下刪除鍵</p>
-            <button type="button" class="btn btn-secondary" @click="closeModal()">返回</button>
-            <button type="button" class="btn btn-danger" @click="deleteData(itemList.id)">確定刪除</button>
-          </div>
-        </div>
-      </div>
+      <removemodal
+      :item-list="itemList"
+      @close-modal="closeModal"
+      @delete-data="deleteData"
+      @open-success-modal="openSuccessModal"
+      @open-error-modal="openErrorModal"
+      ></removemodal>
     </div>
+
     <!-- 批量刪除 -->
     <div class="modal fade" id="deletebatchModal">
-      <div class="modal-dialog modal-dialog-centered ">
-        <div class="modal-content">
-          <div class="modal-header bg-danger">
-            <h5 class="modal-title fw-bolder text-light " id="exampleModalLabel">注意!</h5>
-          </div>
-          <div class="modal-body my-3 ">
-            <p class="fs-5 border-bottom border-2">準備刪除下列商品</p>
-            <p class="text-primary text-opacity-75">商品ID：</p>
-            <ol>
-              <template v-for="item, index in deleteBatchArr" :key="index+123123">
-                <li>{{item}}</li>
-              </template>
-            </ol>
-          </div>
-          <div class="modal-footer d-flex">
-            <p class="me-auto">確認無誤後，請按下刪除鍵</p>
-            <button type="button" class="btn btn-secondary" @click="closeModal()">返回</button>
-            <button type="button" class="btn btn-danger" @click="deleteBatchData()">確定刪除</button>
-          </div>
-        </div>
-      </div>
+      <deletebatchmodal
+        :delete-batch-arr="deleteBatchArr"
+        :api-obj="apiObj"
+        @close-modal="closeModal"
+        @delete-batch-arr-push="deletebatcherrdata"
+        @open-success-modal="openSuccessModal"
+        @open-error-modal="openErrorModal"
+      ></deletebatchmodal>
     </div>
+    
     <!-- successModal -->
     <div class="modal fade" id="successModal">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header bg-success bg-opacity-25">
-            <h5 class="modal-title">成功</h5>
-          </div>
-          <div class="modal-body">
-            <span v-if="is_Edit===0">新增資料</span>
-            <span v-else-if="is_Edit===1">更新資料</span>
-            <span v-else-if="is_Edit===2">刪除資料</span>
-            <span v-else-if="is_Edit===3">批量刪除</span>
-            <span>操作成功</span>
-          </div>
-          <div class="modal-footer ">
-            <button type="button" class="btn btn-secondary" @click="closeSuccessModal()">關閉</button>
-          </div>
-        </div>
-      </div>
+      <successmodal
+        :is_-edit="is_Edit"
+        @close-success-modal="closeSuccessModal"
+      ></successmodal>
     </div>
     <!-- errorModal -->
     <div class="modal fade" id="errorModal">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header ">
-            <h5 class="modal-title">錯誤</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <span v-if="is_Edit===0">新增資料</span>
-            <span v-else-if="is_Edit===1">更新資料</span>
-            <span v-else-if="is_Edit===2">刪除資料</span>
-            <span>操作失敗，詳細請聯絡管理員。</span>
-            <template v-if="!deletebatcherrdata==[]">
-              <p v-for="errdata,index in deletebatcherrdata" :key="index+1321512"> {{errdata}}</p>
-            </template>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" @click="closeErrorModal()">關閉</button>
-          </div>
+      <errormodal
+        :is_-edit="is_Edit"
+        :deletebatcherrdata="deletebatcherrdata"
+        @close-error-modal="closeErrorModal"
+      ></errormodal>
+    </div>
+  </div>
+
+  <script type="text/x-template" id="templateForProductModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header ">
+          <h5 class="modal-title">錯誤</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <span v-if="is_Edit===0">新增資料</span>
+          <span v-else-if="is_Edit===1">更新資料</span>
+          <span v-else-if="is_Edit===2">刪除資料</span>
+          <span>操作失敗，詳細請聯絡管理員。</span>
+          <template v-if="!deletebatcherrdata==[]">
+            <p v-for="errdata,index in deletebatcherrdata" :key="index+1321512"> {{errdata}}</p>
+          </template>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" @click="closeErrorModal()">關閉</button>
         </div>
       </div>
     </div>
-
-  </div>
+  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ" crossorigin="anonymous"></script>
   <script src="./js/product.js" type="module"></script>

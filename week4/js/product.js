@@ -1,34 +1,43 @@
 import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js";
 import pagenation from "./pagenation.js";
+import addeditmodal from "./addeditmodal.js";
+import removemodal from "./removemodal.js";
+import deletebatchmodal from "./deletebatchmodal.js";
+import successmodal from "./successmodal.js";
+import errormodal from "./errormodal.js";
 
 let selectModal = "";
 let deleteModal = "";
 let successModal = "";
 let errorModal = '';
 let deletebatchModal = '';
-const apiUrl = 'https://vue3-course-api.hexschool.io/v2'
-const path = 'evan-classuse'
 
 const app = createApp({
-  components:{
+  components: {
     pagenation,
+    addeditmodal,
+    removemodal,
+    deletebatchmodal,
+    successmodal,
+    errormodal,
   },
   data() {
     return {
-      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-      path: 'evan-classuse',
+      apiObj: {
+        apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+        path: 'evan-classuse',
+      },
       productsList: [],
       itemList: {
         imagesUrl: [],
       },
       is_Edit: null,
       deleteBatchArr: [],
-      deletebatcherrdata:[],
-      pagination:{},
+      deletebatcherrdata: [],
+      pagination: {},
     }
   },
   methods: {
-
     //modal區
     // 開啟新增商品modal按鈕
     addNewData() {
@@ -69,7 +78,7 @@ const app = createApp({
     },
     // 關閉增刪查找modal
     closeModal() {
-      
+
       if (this.is_Edit <= 1) {
         selectModal.hide();
       } else if (this.is_Edit === 2) {
@@ -84,7 +93,7 @@ const app = createApp({
     closeSuccessModal() {
       successModal.hide();
       this.getProductList();
-      
+
     },
     // 關閉操作失敗
     closeErrorModal() {
@@ -94,10 +103,10 @@ const app = createApp({
     // api操作
     // push & put api
     pushData(id) {
-      let url = `${apiUrl}/api/${path}/admin/product`
+      let url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/product`
       let methods = 'post'
       if (this.is_Edit === 1) {
-        url = `${apiUrl}/api/${path}/admin/product/${id}`
+        url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/product/${id}`
         methods = 'put'
       }
       axios[methods](url, { data: this.itemList })
@@ -111,7 +120,7 @@ const app = createApp({
     },
     //刪除deleteApi
     deleteData(id) {
-      let url = `${apiUrl}/api/${path}/admin/product/${id}`
+      let url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/product/${id}`
       axios.delete(url)
         .then((res) => {
           this.closeModal();
@@ -120,25 +129,6 @@ const app = createApp({
           this.closeModal();
           this.openErrorModal();
         })
-    },
-    //批量刪除
-    async deleteBatchData() {
-      let deleteFinish = 0
-      for(let id of this.deleteBatchArr){
-        let url = `${apiUrl}/api/${path}/admin/product/${id}`;
-        try{
-          await axios.delete(url);
-          deleteFinish++;
-        }catch(err){
-          this.deletebatcherrdata.push(`${id}`)
-        }
-      }
-      this.closeModal();
-      if (deleteFinish === this.deleteBatchArr.length) {
-        this.openSuccessModal();
-      } else {
-        this.openErrorModal();
-      }
     },
     // 將checkbox 選取的商品送入刪除序列
     checkItemInDeleteArr(item) {
@@ -151,7 +141,7 @@ const app = createApp({
     },
     //登入驗證
     checkLogin() {
-      const url = `${apiUrl}/api/user/check`
+      const url = `${this.apiObj.apiUrl}/api/user/check`
       axios.post(url)
         .then((res) => {
           this.getProductList()
@@ -161,23 +151,26 @@ const app = createApp({
     },
     // 取得資料
     getProductList(page = 1) {
-      const url = `${apiUrl}/api/${path}/admin/products/?page=${page}`
+      this.itemList = {
+        imagesUrl: [],
+      }
+      this.is_Edit = null
+      this.deleteBatchArr = []
+      this.deletebatcherrdata = []
+      const url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/products/?page=${page}`
       axios.get(url)
         .then((res) => {
-          console.log(res);
           this.productsList = res.data.products;
           this.pagination = res.data.pagination
-  
         })
         .catch((err) => {
           alert(err.data.message)
-          
-          window.location.href="./index.html"
+          window.location.href = "./index.html"
         })
     },
     // 登出
     LogOut() {
-      const urlLogout = `${apiUrl}/logout`;
+      const urlLogout = `${this.apiObj.apiUrl}/logout`;
       const logoutConfirm = confirm('確定要登出嗎?')
       if (logoutConfirm) {
         axios.post(urlLogout)
@@ -206,6 +199,5 @@ const app = createApp({
     //批量刪除
     deletebatchModal = new bootstrap.Modal(document.getElementById('deletebatchModal'));
   },
-  
 })
 app.mount('#app')

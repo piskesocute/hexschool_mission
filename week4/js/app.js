@@ -17,7 +17,7 @@ const app = createApp({
           const { token, expired } = res.data
           document.cookie = `backstageCookie=${token}; expires=${new Date(expired)}; path=/`;
           window.location.href = './backstage.html'
-          console.log(token);
+
         }).catch(err => {
           alert(err.response.data.message + '\r' + err.response.data.error.message)
           window.location.reload();
