@@ -1,12 +1,10 @@
 export default {
   data() {
     return {
-      apiUrl: this.apiObj.apiUrl,
-      path: this.apiObj.path,
       deletebatcherrdata: []
     }
   },
-  props: ['deleteBatchArr', 'apiObj'],
+  props: ['deleteBatchArr'],
   emits: ['deleteBatchArrPush', 'openSuccessModal', 'openErrorModal', 'closeModal'],
   methods: {
     closeModal() {
@@ -21,7 +19,7 @@ export default {
     async deleteBatchData() {
       let deleteFinish = 0
       for (let id of this.deleteBatchArr) {
-        let url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`;
+        let url = `${apiUrl}/api/${path}/admin/product/${id}`;
         try {
           await axios.delete(url);
           deleteFinish++;

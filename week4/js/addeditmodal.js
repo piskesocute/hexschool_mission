@@ -1,14 +1,11 @@
 export default {
-  data() {
-
-  },
-  props: ['apiObj', 'itemList', 'is_Edit'],
+  props: ['itemList', 'is_Edit'],
   methods: {
     pushData(id) {
-      let url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/product`
+      let url = `${apiUrl}/api/${path}/admin/product`
       let methods = 'post'
       if (this.is_Edit === 1) {//is_edit沒有傳入
-        url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/product/${id}`
+        url = `${apiUrl}/api/${path}/admin/product/${id}`
         methods = 'put'
       }
       axios[methods](url, { data: this.itemList })

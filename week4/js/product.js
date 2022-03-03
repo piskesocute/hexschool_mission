@@ -1,16 +1,18 @@
 import { createApp } from "https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js";
 import pagenation from "./pagenation.js";
-import addeditmodal from "./addeditmodal.js";
-import removemodal from "./removemodal.js";
-import deletebatchmodal from "./deletebatchmodal.js";
-import successmodal from "./successmodal.js";
-import errormodal from "./errormodal.js";
+import addeditmodal from "./addEditModal.js";
+import removemodal from "./removeModal.js";
+import deletebatchmodal from "./deleteBatchModal.js";
+import successmodal from "./successModal.js";
+import errormodal from "./errorModal.js";
 
 let selectModal = "";
 let deleteModal = "";
 let successModal = "";
 let errorModal = '';
 let deletebatchModal = '';
+const apiUrl = 'https://vue3-course-api.hexschool.io/v2'
+const path = 'evan-classuse'
 
 const app = createApp({
   components: {
@@ -23,10 +25,6 @@ const app = createApp({
   },
   data() {
     return {
-      apiObj: {
-        apiUrl: 'https://vue3-course-api.hexschool.io/v2',
-        path: 'evan-classuse',
-      },
       productsList: [],
       itemList: {
         imagesUrl: [],
@@ -103,10 +101,10 @@ const app = createApp({
     // api操作
     // push & put api
     pushData(id) {
-      let url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/product`
+      let url = `${apiUrl}/api/${path}/admin/product`
       let methods = 'post'
       if (this.is_Edit === 1) {
-        url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/product/${id}`
+        url = `${apiUrl}/api/${path}/admin/product/${id}`
         methods = 'put'
       }
       axios[methods](url, { data: this.itemList })
@@ -120,7 +118,7 @@ const app = createApp({
     },
     //刪除deleteApi
     deleteData(id) {
-      let url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/product/${id}`
+      let url = `${apiUrl}/api/${path}/admin/product/${id}`
       axios.delete(url)
         .then((res) => {
           this.closeModal();
@@ -141,7 +139,7 @@ const app = createApp({
     },
     //登入驗證
     checkLogin() {
-      const url = `${this.apiObj.apiUrl}/api/user/check`
+      const url = `${apiUrl}/api/user/check`
       axios.post(url)
         .then((res) => {
           this.getProductList()
@@ -157,7 +155,7 @@ const app = createApp({
       this.is_Edit = null
       this.deleteBatchArr = []
       this.deletebatcherrdata = []
-      const url = `${this.apiObj.apiUrl}/api/${this.apiObj.path}/admin/products/?page=${page}`
+      const url = `${apiUrl}/api/${path}/admin/products/?page=${page}`
       axios.get(url)
         .then((res) => {
           this.productsList = res.data.products;
@@ -170,7 +168,7 @@ const app = createApp({
     },
     // 登出
     LogOut() {
-      const urlLogout = `${this.apiObj.apiUrl}/logout`;
+      const urlLogout = `${apiUrl}/logout`;
       const logoutConfirm = confirm('確定要登出嗎?')
       if (logoutConfirm) {
         axios.post(urlLogout)

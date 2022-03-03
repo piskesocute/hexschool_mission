@@ -17,7 +17,6 @@ export default {
   },
   mounted() {
     this.itemLists = this.itemList
-    console.log("123", this.itemList);
   },
   template: `
 <div class="modal-dialog modal-dialog-centered ">

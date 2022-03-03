@@ -136,7 +136,6 @@
     <div class="modal fade" id="selectModal">
       <addeditmodal
       :item-list="itemList"
-      :api-obj="apiObj"
       :is_-edit="is_Edit"
       @close-modal="closeModal"
       @open-success-modal="openSuccessModal"
@@ -159,7 +158,6 @@
     <div class="modal fade" id="deletebatchModal">
       <deletebatchmodal
         :delete-batch-arr="deleteBatchArr"
-        :api-obj="apiObj"
         @close-modal="closeModal"
         @delete-batch-arr-push="deletebatcherrdata"
         @open-success-modal="openSuccessModal"
