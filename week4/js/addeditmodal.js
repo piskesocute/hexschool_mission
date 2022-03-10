@@ -1,31 +1,39 @@
+/* global axios */
+
 export default {
+  data() {
+    return {
+      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+      path: 'evan-classuse',
+    };
+  },
   props: ['itemList', 'is_Edit'],
   methods: {
     pushData(id) {
-      let url = `${apiUrl}/api/${path}/admin/product`
-      let methods = 'post'
-      if (this.is_Edit === 1) {//is_edit沒有傳入
-        url = `${apiUrl}/api/${path}/admin/product/${id}`
-        methods = 'put'
+      let url = `${this.apiUrl}/api/${this.path}/admin/product`;
+      let methods = 'post';
+      if (this.is_Edit === 1) { // is_edit沒有傳入
+        url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`;
+        methods = 'put';
       }
       axios[methods](url, { data: this.itemList })
-        .then((res) => {
+        .then(() => {
           this.closeModal();
 
           this.openSuccessModal();
-        }).catch((err) => {
+        }).catch(() => {
           this.closeModal();
           this.openErrorModal();
-        })
+        });
     },
     closeModal() {
-      this.$emit('close-modal')
+      this.$emit('close-modal');
     },
     openSuccessModal() {
-      this.$emit('open-success-modal')
+      this.$emit('open-success-modal');
     },
     openErrorModal() {
-      this.$emit('open-error-modal')
+      this.$emit('open-error-modal');
     },
   },
   template: `
@@ -133,5 +141,5 @@ export default {
           </div>
         </div>
       </div>
-    </div>`
-}
+    </div>`,
+};

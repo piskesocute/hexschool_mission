@@ -1,34 +1,37 @@
+/* global axios */
 export default {
   data() {
     return {
-      deletebatcherrdata: []
-    }
+      apiUrl: 'https://vue3-course-api.hexschool.io/v2',
+      path: 'evan-classuse',
+      deletebatcherrdata: [],
+    };
   },
   props: ['deleteBatchArr'],
   emits: ['deleteBatchArrPush', 'openSuccessModal', 'openErrorModal', 'closeModal'],
   methods: {
     closeModal() {
-      this.$emit('closeModal')
+      this.$emit('closeModal');
     },
     openSuccessModal() {
-      this.$emit('openSuccessModal')
+      this.$emit('openSuccessModal');
     },
     openErrorModal() {
-      this.$emit('openErrorModal')
+      this.$emit('openErrorModal');
     },
     async deleteBatchData() {
-      let deleteFinish = 0
-      for (let id of this.deleteBatchArr) {
-        let url = `${apiUrl}/api/${path}/admin/product/${id}`;
+      let deleteFinish = null;
+      this.deleteBatchArr.forEach((id) => {
+        const url = `${this.apiUrl}/api/${this.path}/admin/product/${id}`;
         try {
-          await axios.delete(url);
-          deleteFinish++;
+          axios.delete(url);
+          deleteFinish += 1;
         } catch (err) {
-          this.deletebatcherrdata.push(`${id}`)
+          this.deletebatcherrdata.push(`${id}`);
         }
-      }
+      });
       this.closeModal();
-      this.$emit('deleteBatchArrPush', this.deletebatcherrdata)
+      this.$emit('deleteBatchArrPush', this.deletebatcherrdata);
 
       if (deleteFinish === this.deleteBatchArr.length) {
         this.openSuccessModal();
@@ -60,4 +63,4 @@ export default {
       </div>
     </div>
   `,
-}
+};

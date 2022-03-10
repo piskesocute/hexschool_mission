@@ -54,12 +54,12 @@
       <div class="row">
         <div class="d-flex justify-content-between align-items-center ">
           <h2 class="my-0">產品列表</h2>
-            <p class="me-auto mt-3 mb-0 ">目前有 <span class="text-primary">{{productsList.length }}</span> 項產品</p>
-            <div class="me-auto" >
+          <p class="me-auto mt-3 mb-0 ">目前有 <span class="text-primary">{{productsList.length }}</span> 項產品</p>
+          <div class="me-auto">
 
-          <pagenation :pages="pagination" @change-page="getProductList">
-          </pagenation>
-        </div>
+            <pagenation :pages="pagination" @change-page="getProductList">
+            </pagenation>
+          </div>
 
           <button type="=button" class="btn btn-primary me-3" @click="addNewData()">新增產品</button>
           <button type="=button" type="button" v-if="deleteBatchArr.length == 0" class="btn btn-secondary " disabled>刪除選取項目</button>
@@ -104,7 +104,7 @@
                   <div class="w-75 mx-0 my-auto">
                     <img v-if="item.imageUrl" class="" :src="item.imageUrl" alt="">
                     <img v-else-if="!item.imageUrl && item.imagesUrl" class="" :src="item.imagesUrl[0]" alt="">
-                    <span v-else>無圖片</>
+                    <span v-else>無圖片 </>
                   </div>
                 </div>
               </td>
@@ -134,51 +134,26 @@
     </div>
     <!-- Add&Edit modal -->
     <div class="modal fade" id="selectModal">
-      <addeditmodal
-      :item-list="itemList"
-      :is_-edit="is_Edit"
-      @close-modal="closeModal"
-      @open-success-modal="openSuccessModal"
-      @open-error-modal="openErrorModal"
-      ></addeditmodal>
+      <addeditmodal :item-list="itemList" :is_-edit="is_Edit" @close-modal="closeModal" @open-success-modal="openSuccessModal" @open-error-modal="openErrorModal"></addeditmodal>
     </div>
 
     <!-- delete modal -->
     <div class="modal fade" id="deleteModal">
-      <removemodal
-      :item-list="itemList"
-      @close-modal="closeModal"
-      @delete-data="deleteData"
-      @open-success-modal="openSuccessModal"
-      @open-error-modal="openErrorModal"
-      ></removemodal>
+      <removemodal :item-list="itemList" @close-modal="closeModal" @delete-data="deleteData" @open-success-modal="openSuccessModal" @open-error-modal="openErrorModal"></removemodal>
     </div>
 
     <!-- 批量刪除 -->
     <div class="modal fade" id="deletebatchModal">
-      <deletebatchmodal
-        :delete-batch-arr="deleteBatchArr"
-        @close-modal="closeModal"
-        @delete-batch-arr-push="deletebatcherrdata"
-        @open-success-modal="openSuccessModal"
-        @open-error-modal="openErrorModal"
-      ></deletebatchmodal>
+      <deletebatchmodal :delete-batch-arr="deleteBatchArr" @close-modal="closeModal" @delete-batch-arr-push="deletebatcherrdata" @open-success-modal="openSuccessModal" @open-error-modal="openErrorModal"></deletebatchmodal>
     </div>
-    
+
     <!-- successModal -->
     <div class="modal fade" id="successModal">
-      <successmodal
-        :is_-edit="is_Edit"
-        @close-success-modal="closeSuccessModal"
-      ></successmodal>
+      <successmodal :is_-edit="is_Edit" @close-success-modal="closeSuccessModal"></successmodal>
     </div>
     <!-- errorModal -->
     <div class="modal fade" id="errorModal">
-      <errormodal
-        :is_-edit="is_Edit"
-        :deletebatcherrdata="deletebatcherrdata"
-        @close-error-modal="closeErrorModal"
-      ></errormodal>
+      <errormodal :is_-edit="is_Edit" :deletebatcherrdata="deletebatcherrdata" @close-error-modal="closeErrorModal"></errormodal>
     </div>
   </div>
 

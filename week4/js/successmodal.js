@@ -2,8 +2,8 @@ export default {
   props: ['is_Edit'],
   methods: {
     closeSuccessModal() {
-      this.$emit('closeSuccessModal')
-    }
+      this.$emit('closeSuccessModal');
+    },
   },
   template: `
   <div class="modal-dialog modal-dialog-centered">
@@ -24,4 +24,4 @@ export default {
     </div>
   </div>
   `,
-}
+};

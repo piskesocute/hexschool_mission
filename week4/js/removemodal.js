@@ -4,19 +4,19 @@ export default {
       itemLists: {
         imagesUrl: [],
       },
-    }
+    };
   },
   props: ['itemList'],
   methods: {
     closeModal() {
-      this.$emit('closeModal')
+      this.$emit('closeModal');
     },
     deleteData() {
-      this.$emit('deleteData', this.itemList.id)
+      this.$emit('deleteData', this.itemList.id);
     },
   },
   mounted() {
-    this.itemLists = this.itemList
+    this.itemLists = this.itemList;
   },
   template: `
 <div class="modal-dialog modal-dialog-centered ">
@@ -46,5 +46,5 @@ export default {
   </div>
 </div>
 
-`
-}
+`,
+};

@@ -2,8 +2,8 @@ export default {
   props: ['is_Edit', 'deletebatcherrdata'],
   methods: {
     closeErrorModal() {
-      this.$emit('closeErrorModal')
-    }
+      this.$emit('closeErrorModal');
+    },
   },
   template: `
   <div class="modal-dialog modal-dialog-centered">
@@ -25,7 +25,6 @@ export default {
         <button type="button" class="btn btn-secondary" @click="closeErrorModal()">關閉</button>
       </div>
     </div>
-  </div>`
+  </div>`,
 
-
-}
+};

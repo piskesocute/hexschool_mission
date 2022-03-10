@@ -39,5 +39,5 @@ export default {
         </a>
       </li>
     </ul>
-  </nav>`
-}
+  </nav>`,
+};
