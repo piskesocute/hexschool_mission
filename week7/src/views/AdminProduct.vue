@@ -1,10 +1,111 @@
+<script>
+import Pagination from '@/components/PagenationComponents.vue';
+import EditModal from '@/components/EditModal.vue';
+import DeleteModal from '../components/DeleteModal.vue';
+
+export default {
+  data() {
+    return {
+      // 商品暫存
+      products: [],
+      // paginationAPI內容
+      pagination: {},
+      // 現在頁面
+      nowPage: 1,
+      // 是否為新增產品
+      isNew: false,
+      // 點擊的商品列表
+      productList: {},
+    };
+  },
+  components: {
+    Pagination,
+    EditModal,
+    DeleteModal,
+  },
+  methods: {
+    getProduct(page = 1) {
+      this.nowPage = page;
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`;
+      this.$http
+        .get(api)
+        .then((res) => {
+          this.products = res.data.products;
+          this.pagination = res.data.pagination;
+          console.log(this.pagination);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    // 開啟modal
+    openModal(isNew, item) {
+      // 假如true則為新增，如否則為編輯
+      if (isNew) {
+        this.productList = {};
+        this.isNew = true;
+        console.log('true', this.productList);
+      } else {
+        this.productList = JSON.parse(JSON.stringify(item));
+        console.log('false', this.productList);
+        this.isNew = false;
+      }
+      const ModalComponent = this.$refs.productModal;
+      ModalComponent.openModal();
+    },
+    openDelModal(item) {
+      this.productList = { ...item };
+      const { deleteModal } = this.$refs;
+      deleteModal.openModal();
+    },
+    pushdata(item) {
+      this.productList = item;
+      let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`;
+      let http = 'post';
+      let status = '新增產品';
+      if (!this.isNew) {
+        api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.productList.id}`;
+        http = 'put';
+        status = '更新產品';
+      }
+      const ModalComponent = this.$refs.productModal;
+      console.log(status);
+      this.$http[http](api, { data: this.productList })
+        .then((res) => {
+          console.log(res);
+          ModalComponent.hideModal();
+          this.getProduct(this.nowPage);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    deleteData() {
+      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product/${this.productList.id}`;
+      this.$http.delete(api).then((res) => {
+        console.log(res);
+        const { deleteModal } = this.$refs;
+        deleteModal.hideModal();
+      });
+    },
+
+  },
+  created() {
+    this.getProduct();
+  },
+};
+</script>
+
 <template>
   <div class="text-end mt-4">
     <button class="btn btn-primary" type="button" @click="openModal(true)">
       建立新的產品
     </button>
   </div>
-  <Pagination></Pagination>
+  <Pagination
+  :pages="pagination"
+  @change-page="getProduct"
+  ></Pagination>
   <table class="table mt-4 text-center">
     <thead>
       <tr>
@@ -87,104 +188,6 @@
     @del-item="deleteData"
   ></DeleteModal>
 </template>
-
-<script>
-import Pagination from '@/components/PagenationComponents.vue';
-import EditModal from '@/components/EditModal.vue';
-import DeleteModal from '../components/DeleteModal.vue';
-
-export default {
-  data() {
-    return {
-      // 商品暫存
-      products: [],
-      // paginationAPI內容
-      pagination: {},
-      // 現在頁面
-      nowPage: 1,
-      // 是否為新增產品
-      isNew: false,
-      // 點擊的商品列表
-      productList: {},
-    };
-  },
-  components: {
-    Pagination,
-    EditModal,
-    DeleteModal,
-  },
-  methods: {
-    getProduct(page = 1) {
-      this.nowPage = page;
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`;
-      this.$http
-        .get(api)
-        .then((res) => {
-          this.products = res.data.products;
-          this.pagination = res.data.pagination;
-          console.log(this.products);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    // 開啟modal
-    openModal(isNew, item) {
-      // 假如true則為新增，如否則為編輯
-      if (isNew) {
-        this.productList = {};
-        this.isNew = true;
-        console.log('true', this.productList);
-      } else {
-        this.productList = JSON.parse(JSON.stringify(item));
-        console.log('false', this.productList);
-        this.isNew = false;
-      }
-      const ModalComponent = this.$refs.productModal;
-      ModalComponent.openModal();
-    },
-    openDelModal(item) {
-      this.productList = { ...item };
-      const { deleteModal } = this.$refs;
-      deleteModal.openModal();
-    },
-    pushdata(item) {
-      this.productList = item;
-      let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`;
-      let http = 'post';
-      let status = '新增產品';
-      if (!this.isNew) {
-        api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.productList.id}`;
-        http = 'put';
-        status = '更新產品';
-      }
-      const ModalComponent = this.$refs.productModal;
-      console.log(status);
-      this.$http[http](api, { data: this.productList })
-        .then((res) => {
-          console.log(res);
-          ModalComponent.hideModal();
-          this.getProduct(this.nowPage);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-    deleteData() {
-      console.log(this.productList);
-      const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product/${this.productList.id}`;
-      this.$http.delete(api).then((res) => {
-        console.log(res);
-        const { deleteModal } = this.$refs;
-        deleteModal.hideModal();
-      });
-    },
-  },
-  created() {
-    this.getProduct();
-  },
-};
-</script>
 
 <style scoped>
 img {

@@ -71,13 +71,24 @@ export default {
             <router-link class="nav-link" to="/">前台首頁</router-link>
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/admin/adminproduct">產品列表</router-link>
+            <router-link class="nav-link" to="/admin/adminproduct"
+              >產品列表</router-link
+            >
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" to="/admin/coupon">優惠券</router-link>
+            <router-link class="nav-link" to="/admin/coupon"
+              >優惠券</router-link
+            >
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link" to="/admin/order"
+              >訂單管理</router-link
+            >
           </li>
         </ul>
-        <button type="button" class="btn btn-danger" @click="logOut">登出</button>
+        <button type="button" class="btn btn-danger" @click="logOut">
+          登出
+        </button>
       </div>
     </div>
   </nav>

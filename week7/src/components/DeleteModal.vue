@@ -44,11 +44,11 @@ export default {
           </h5>
         </div>
         <div class="modal-body my-3">
-          <p class="fs-5 border-bottom border-2">準備刪除下列商品</p>
-          <p class="text-primary text-opacity-75">商品ID：</p>
-          <ol>
-            <li>{{ item.category }}</li>
-          </ol>
+          <p class="fs-5 border-bottom border-2">準備刪除下列項目</p>
+          <ul style="list-style-type:none;" class="text-primary text-opacity-75">
+            <li><b>項目標題：</b>{{ item.title }}</li>
+            <li><b>項目ID：</b>{{item.id}}</li>
+          </ul>
         </div>
         <div class="modal-footer d-flex">
           <p class="me-auto">確認無誤後，請按下刪除鍵</p>
