@@ -1,4 +1,33 @@
+<script>
+export default {
+  data() {
+    return {
+      isLoading: false,
+      product: {
+        imagesUrl: [''],
+      },
+    };
+  },
+  methods: {
+    getProduct() {
+      this.isLoading = true;
+      const { id } = this.$route.params;
+      this.$http(
+        `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/product/${id}`,
+      ).then((res) => {
+        this.product = res.data.product;
+        this.isLoading = false;
+      });
+    },
+  },
+  mounted() {
+    this.getProduct();
+  },
+};
+</script>
+
 <template>
+<Loading :active="isLoading" :z-index="1060"></Loading>
   <h1>產品細節頁</h1>
   <div class="container">
     <div class="row justify-content-center align-items-center">
@@ -32,33 +61,6 @@
     </div>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      product: {
-        imagesUrl: [''],
-      },
-    };
-  },
-  methods: {
-    getProduct() {
-      // console.log(this.$route.params);
-      const { id } = this.$route.params;
-      this.$http(
-        `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/product/${id}`,
-      ).then((res) => {
-        this.product = res.data.product;
-        // console.log(this.product);
-      });
-    },
-  },
-  mounted() {
-    this.getProduct();
-  },
-};
-</script>
 
 <style>
 </style>

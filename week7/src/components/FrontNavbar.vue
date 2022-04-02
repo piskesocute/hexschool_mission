@@ -18,30 +18,30 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link class="nav-link" aria-current="page" to="/"
+            <router-link class="nav-link" aria-current="page" to="/product"
               >首頁</router-link
             >
           </li>
           <li class="nav-item">
-            <router-link class="nav-link" aria-current="page" to="/products"
+            <router-link class="nav-link" aria-current="page" to="/product/products"
               >產品列表</router-link
             >
           </li>
 
           <li class="nav-item">
-            <router-link class="nav-link" aria-current="page" to="/cart"
+            <router-link class="nav-link" aria-current="page" to="/product/cart"
               >購物車</router-link
             >
           </li>
 
           <li class="nav-item">
-            <router-link class="nav-link" aria-current="page" to="/admin"
+            <router-link class="nav-link" aria-current="page" to="/"
               >後台</router-link
             >
           </li>
         </ul>
       </div>
-      <router-link class="btn btn-danger" to="/cart" ref="navbarcart"
+      <router-link class="btn btn-danger" to="/product/cart" ref="navbarcart"
         >結帳
         <span
           v-show="cartData?.carts?.length"

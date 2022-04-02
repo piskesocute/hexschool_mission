@@ -17,9 +17,8 @@ export default {
       const logOutApi = `${process.env.VUE_APP_API}/logout`;
       this.$http
         .post(logOutApi)
-        .then((res) => {
+        .then(() => {
           this.status = false;
-          console.log(res);
           this.$router.push('/');
         })
         .catch((err) => {
@@ -68,7 +67,7 @@ export default {
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <router-link class="nav-link" to="/">前台首頁</router-link>
+            <router-link class="nav-link" to="/product">前台首頁</router-link>
           </li>
           <li class="nav-item">
             <router-link class="nav-link" to="/admin/adminproduct"

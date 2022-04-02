@@ -1,4 +1,5 @@
 <template>
+<Loading :active="isLoading" :z-index="1060"></Loading>
   <h1>cart</h1>
   <div class="container">
     <div class="text-end">
@@ -10,77 +11,6 @@
         清空購物車
       </button>
     </div>
-    <!-- <div class="row">
-      <table class="table table-hover mt-2 text-center">
-        <thead>
-          <tr class>
-            <th class="py-1">產品名稱</th>
-            <th class="py-1">產品類型</th>
-            <th class="py-1">原價</th>
-            <th class="py-1">售價</th>
-            <th class="py-1">商品狀態</th>
-            <th class="py-1"></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr class="align-middle" v-for="item in data" :key="item.id">
-            <td width="10%" class="align-middle">
-              <div class="d-flex justify-content-center align-items-center">
-                <div class="mx-0 my-auto">
-                  <img
-                    style="max-height: 80px; display: block"
-                    :src="item.imageUrl || item.imagesUrl[0]"
-                    alt="img"
-                  />
-                </div>
-              </div>
-            </td>
-            <td width class="text-start">{{ item.title }}</td>
-            <td width="10%">{{ item.category }}</td>
-            <td width="10%">{{ item.origin_price }}</td>
-            <td width="10%">{{ item.price }}</td>
-            <td width="10%" class="text-center">
-              <span
-                v-if="item.is_enabled === 1"
-                class="badge rounded-pill bg-success fs-6 fw"
-                >銷售中</span
-              >
-              <span
-                v-else-if="item.is_enabled === 2"
-                class="badge rounded-pill bg-danger fs-6"
-                >已售完</span
-              >
-              <span
-                v-else-if="item.is_enabled === 3"
-                class="badge rounded-pill bg-secondary fs-6"
-                >下架</span
-              >
-            </td>
-            <td width="20% ">
-              <button
-                type="button"
-                class="btn btn-success me-3"
-                data-id="index"
-                @click="openProductModal(item.id)"
-                :id="productId"
-              >
-                查看
-              </button>
-
-              <button
-                type="button"
-                class="btn btn-outline-danger"
-                :disabled="item.is_enabled === !1"
-                data-id="index"
-                @click="addToCart(item.id)"
-              >
-                加入購物車
-              </button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div> -->
     <table class="table align-middle">
       <thead>
         <tr class="text-center">
@@ -197,25 +127,31 @@ export default {
           address: '',
         },
         message: '',
+
       },
+      isLoading: false,
     };
   },
   methods: {
     // 取得購物車
     getCartItem() {
+      this.isLoading = true;
       this.$http(
         `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`,
       )
         .then((res) => {
           this.cartData = res.data.data;
-          // console.log('取得購物車');
+          this.isLoading = false;
         })
-        .catch(() => {
+        .catch((err) => {
           // this.$refs.errorModal.openErrorModal('購物車資料失敗');
+          console.dir(err);
+          this.isLoading = false;
         });
     },
     // 刪除購物車
     removeCartItem(id) {
+      this.isLoading = true;
       let cart = `cart/${id}`;
       if (typeof id !== 'string') cart = 'carts';
       this.$http
@@ -223,15 +159,19 @@ export default {
           `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/${cart}`,
         )
         .then(() => {
-          // console.log('刪除購物車成功');
           emitter.emit('get-cart');
           this.getCartItem();
+          this.isLoading = false;
         })
-        .catch(() => {});
+        .catch((err) => {
+          console.dir(err);
+          this.isLoading = false;
+        });
     },
 
     // 更新購物車
     updateCartItem(item) {
+      this.isLoading = true;
       const data = {
         product_id: item.id,
         qty: item.qty,
@@ -243,24 +183,30 @@ export default {
           { data },
         )
         .then(() => {
-          // console.log('更新購物車成功');
           this.getCartItem();
+          this.isLoading = false;
         })
-        .catch(() => {});
+        .catch((err) => {
+          console.dir(err);
+          this.isLoading = false;
+        });
     },
     getproduct() {
+      this.isLoading = true;
       this.$http(
         `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/products/all`,
       )
         .then((res) => {
-          // console.log('getproduct', res);
           this.data = res.data.products;
+          this.isLoading = false;
         })
-        .catch(() => {
-          // console.log();
+        .catch((err) => {
+          console.dir(err);
+          this.isLoading = false;
         });
     },
     addToCart(id, qty = 1) {
+      this.isLoading = true;
       const data = {
         product_id: id,
         qty,
@@ -272,10 +218,13 @@ export default {
           { data },
         )
         .then(() => {
-          // console.log(data);
           emitter.emit('get-cart');
+          this.isLoading = false;
         })
-        .catch(() => {});
+        .catch((err) => {
+          console.dir(err);
+          this.isLoading = false;
+        });
     },
   },
   mounted() {

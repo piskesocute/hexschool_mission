@@ -13,6 +13,7 @@ export default {
       isNew: false,
       couponList: {},
       nowPage: 1,
+      isLoading: false,
     };
   },
   components: {
@@ -23,6 +24,7 @@ export default {
   methods: {
     // 優惠券取得
     getCoupon(page = 1) {
+      this.isLoading = true;
       this.nowPage = page;
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupons?page=${page}`;
       this.$http
@@ -30,9 +32,11 @@ export default {
         .then((res) => {
           this.coupons = res.data.coupons;
           this.pagination = res.data.pagination;
+          this.isLoading = false;
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
+          this.isLoading = false;
         });
     },
     openModal(isNew, item) {
@@ -51,8 +55,8 @@ export default {
       ModalComponent.openModal();
     },
     updateCoupon(coupon) {
+      this.isLoading = true;
       this.couponList = coupon;
-      console.log(this.couponList);
       let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon/`;
       let http = 'post';
       if (!this.isNew) {
@@ -65,9 +69,11 @@ export default {
         .then(() => {
           ModalComponent.hideModal();
           this.getCoupon(this.nowPage);
+          this.isLoading = false;
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
+          this.isLoading = false;
         });
     },
     changeEnable(isNew, item) {
@@ -76,16 +82,22 @@ export default {
     },
     openDelModal(item) {
       this.couponList = { ...item };
-      console.log(this.couponList);
       const { deleteModal } = this.$refs;
       deleteModal.openModal();
     },
     deleteCoupon() {
+      this.isLoading = true;
+      const { deleteModal } = this.$refs;
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/coupon/${this.couponList.id}`;
-      this.$http.delete(api).then((res) => {
-        console.log(res);
-        const { deleteModal } = this.$refs;
+      this.$http.delete(api).then(() => {
+        this.getCoupon(this.nowPage);
         deleteModal.hideModal();
+        this.isLoading = false;
+      }).catch((err) => {
+        console.dir(err);
+        this.getCoupon(this.nowPage);
+        deleteModal.hideModal();
+        this.isLoading = false;
       });
     },
   },
@@ -96,6 +108,7 @@ export default {
 </script>
 
 <template>
+<Loading :active="isLoading" :z-index="1060"></Loading>
   <CouponModal
     ref="couponModal"
     :coupon="couponList"
@@ -126,7 +139,7 @@ export default {
     </thead>
     <tbody>
       <tr v-for="(item, index) in coupons" :key="index">
-        <th scope="row">{{ item.title }}</th>
+        <td >{{ item.title }}</td>
         <td>{{ item.percent }}%</td>
         <td>{{ $filters.date(item.due_date) }}</td>
         <td class="">
@@ -166,7 +179,4 @@ export default {
   </table>
 </template>
 <style scoped>
-* {
-  outline: 1px solid #000;
-}
 </style>

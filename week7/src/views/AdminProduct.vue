@@ -16,6 +16,7 @@ export default {
       isNew: false,
       // 點擊的商品列表
       productList: {},
+      isLoading: false,
     };
   },
   components: {
@@ -25,6 +26,7 @@ export default {
   },
   methods: {
     getProduct(page = 1) {
+      this.isLoading = true;
       this.nowPage = page;
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/products?page=${page}`;
       this.$http
@@ -32,10 +34,11 @@ export default {
         .then((res) => {
           this.products = res.data.products;
           this.pagination = res.data.pagination;
-          console.log(this.pagination);
+          this.isLoading = false;
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
+          this.isLoading = false;
         });
     },
     // 開啟modal
@@ -44,10 +47,8 @@ export default {
       if (isNew) {
         this.productList = {};
         this.isNew = true;
-        console.log('true', this.productList);
       } else {
         this.productList = JSON.parse(JSON.stringify(item));
-        console.log('false', this.productList);
         this.isNew = false;
       }
       const ModalComponent = this.$refs.productModal;
@@ -59,33 +60,36 @@ export default {
       deleteModal.openModal();
     },
     pushdata(item) {
+      this.isLoading = true;
       this.productList = item;
       let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`;
       let http = 'post';
-      let status = '新增產品';
       if (!this.isNew) {
         api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.productList.id}`;
         http = 'put';
-        status = '更新產品';
       }
       const ModalComponent = this.$refs.productModal;
-      console.log(status);
       this.$http[http](api, { data: this.productList })
-        .then((res) => {
-          console.log(res);
+        .then(() => {
           ModalComponent.hideModal();
           this.getProduct(this.nowPage);
+          this.isLoading = false;
         })
         .catch((err) => {
-          console.log(err);
+          console.dir(err);
+          this.isLoading = false;
         });
     },
     deleteData() {
+      this.isLoading = true;
       const api = `${process.env.VUE_APP_API}/api/${process.env.VUE_APP_PATH}/admin/product/${this.productList.id}`;
-      this.$http.delete(api).then((res) => {
-        console.log(res);
+      this.$http.delete(api).then(() => {
         const { deleteModal } = this.$refs;
+        this.isLoading = false;
         deleteModal.hideModal();
+      }).catch((err) => {
+        console.dir(err);
+        this.isLoading = false;
       });
     },
 
@@ -97,6 +101,7 @@ export default {
 </script>
 
 <template>
+<Loading :active="isLoading" :z-index="1060"></Loading>
   <div class="text-end mt-4">
     <button class="btn btn-primary" type="button" @click="openModal(true)">
       建立新的產品

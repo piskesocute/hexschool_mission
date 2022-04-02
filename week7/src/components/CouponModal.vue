@@ -7,7 +7,9 @@ export default {
       // paginationAPI內容
       pagination: {},
       // 優惠券暫存
-      couponList: {},
+      couponList: {
+        is_enabled: 0,
+      },
       // 時間暫存
       due_date: '',
     };
@@ -29,6 +31,7 @@ export default {
   watch: {
     coupon() {
       this.couponList = this.coupon;
+      if (this.coupon.is_enabled !== Number) this.couponList.is_enabled = 0;
       const dateAndTime = new Date(this.couponList.due_date * 1000)
         .toISOString()
         .split('T');
